@@ -14,25 +14,35 @@ use App\Services\RbacService;
  * per-method check that ran inside every admin controller method.
  *
  * Usage:
+ *   // As a route-group middleware (no args): super-admins pass through;
+ *   // other users get 403 only if no per-method middleware fires.
+ *   Route::group(['middleware' => ['rbac']], function () { ... });
+ *
+ *   // As a per-method middleware (with permission):
  *   Route::get('/student', [StudentController::class, 'index'])
  *        ->middleware('rbac:student.view');
- *
- * Naming convention (from CI3 `permission_category.short_code`):
- *   "<category>.<action>" where action is one of: view, create, edit, delete.
  */
 class CheckPermission
 {
     public function __construct(private RbacService $rbac) {}
 
-    public function handle(Request $request, Closure $next, string $permission): Response
+    public function handle(Request $request, Closure $next, ?string $permission = null): Response
     {
         $user = auth('admin')->user();
 
+        // No user → let AuthenticateAdmin redirect to login
         if (! $user) {
-            abort(403, 'Unauthorized action.');
+            return $next($request);
         }
 
+        // Super-admin bypasses all permission checks
         if ($this->rbac->isSuperAdmin($user)) {
+            return $next($request);
+        }
+
+        // When called as a route-group middleware with no permission arg,
+        // let the request through; per-method middleware will enforce.
+        if ($permission === null) {
             return $next($request);
         }
 

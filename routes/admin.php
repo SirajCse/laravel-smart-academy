@@ -110,19 +110,22 @@ use App\Http\Controllers\Admin\{
 // ─── Dashboard / landing ────────────────────────────────────────────
 Route::get('/dashboard',                              [DashboardController::class, 'index'])->name('dashboard');
 
+// Admin profile (stub - reuses SchSetting index)
+Route::get('/profile',                                [DashboardController::class, 'profile'])->name('profile');
+
 // ─── School settings ───────────────────────────────────────────────
 Route::get('/schsettings',                            [SchSettingController::class, 'index'])->name('schsettings.index');
-Route::post('/schsettings',                           [SchSettingController::class, 'update']);
-Route::post('/schsettings/logo',                      [SchSettingController::class, 'uploadLogo']);
-Route::post('/schsettings/sidebar',                   [SchSettingController::class, 'uploadSidebar']);
-Route::get('/schsettings/audit',                      [SchSettingController::class, 'audit']);
-Route::get('/schsettings/backup',                     [SchSettingController::class, 'backup']);
-Route::post('/schsettings/backup',                   [SchSettingController::class, 'runBackup']);
-Route::post('/schsettings/restore',                   [SchSettingController::class, 'restoreBackup']);
+Route::post('/schsettings',                           [SchSettingController::class, 'update'])->name('schsettings.update');
+Route::post('/schsettings/logo',                      [SchSettingController::class, 'uploadLogo'])->name('schsettings.logo');
+Route::post('/schsettings/sidebar',                   [SchSettingController::class, 'uploadSidebar'])->name('schsettings.sidebar');
+Route::get('/schsettings/audit',                      [SchSettingController::class, 'audit'])->name('schsettings.audit');
+Route::get('/schsettings/backup',                     [SchSettingController::class, 'backup'])->name('schsettings.backup');
+Route::post('/schsettings/backup',                   [SchSettingController::class, 'runBackup'])->name('schsettings.runBackup');
+Route::post('/schsettings/restore',                   [SchSettingController::class, 'restoreBackup'])->name('schsettings.restore');
 
 // ─── Students ──────────────────────────────────────────────────────
 Route::resource('student',                            StudentController::class);
-Route::get('student/import/sample',                   [StudentController::class, 'sampleImport']);
+Route::get('student/import/sample',                   [StudentController::class, 'sampleImport'])->name('student.import.sample');
 Route::post('student/import',                         [StudentController::class, 'import'])->name('student.import');
 Route::post('student/{id}/disable',                  [StudentController::class, 'disable']);
 Route::post('student/{id}/enable',                   [StudentController::class, 'enable']);
@@ -138,7 +141,7 @@ Route::post('student/{id}/photo',                     [StudentController::class,
 Route::resource('class',                              ClassController::class);
 Route::resource('section',                            SectionController::class);
 Route::resource('class-section',                      ClassSectionController::class);
-Route::get('class/{class}/sections',                 [ClassController::class, 'sectionsByClass']);
+Route::get('class/{class}/sections',                 [ClassController::class, 'sectionsByClass'])->name('class.sectionsByClass');
 Route::resource('session',                            SessionController::class);
 Route::resource('category',                           CategoryController::class);
 Route::resource('subject',                            SubjectController::class);
@@ -174,6 +177,14 @@ Route::resource('feegroup',                           FeegroupController::class)
 Route::resource('feesessiongroup',                    FeesessiongroupController::class);
 Route::resource('feemaster',                          FeemasterController::class);
 Route::resource('feediscount',                       FeediscountController::class);
+// Provide the alias names used by Blade views
+Route::get('fees-discount',                            [FeediscountController::class, 'index'])->name('fees-discount.index');
+Route::get('fees-discount/create',                     [FeediscountController::class, 'create'])->name('fees-discount.create');
+Route::post('fees-discount',                           [FeediscountController::class, 'store'])->name('fees-discount.store');
+Route::get('fees-discount/{record}',                   [FeediscountController::class, 'show'])->name('fees-discount.show');
+Route::get('fees-discount/{record}/edit',              [FeediscountController::class, 'edit'])->name('fees-discount.edit');
+Route::put('fees-discount/{record}',                   [FeediscountController::class, 'update'])->name('fees-discount.update');
+Route::delete('fees-discount/{record}',                [FeediscountController::class, 'destroy'])->name('fees-discount.destroy');
 Route::resource('feereminder',                       FeereminderController::class);
 Route::resource('student-fee',                        StudentfeeController::class);
 Route::post('student-fee/{id}/collect',               [StudentfeeController::class, 'collect']);
@@ -285,16 +296,16 @@ Route::get('migrate',                                [MigrateController::class, 
 Route::post('migrate/run',                           [MigrateController::class, 'run']);
 
 // ─── Reports ───────────────────────────────────────────────────────
-Route::get('reports/student',                        [ReportController::class, 'student']);
-Route::get('reports/fee',                            [ReportController::class, 'fee']);
-Route::get('reports/attendance',                     [ReportController::class, 'attendance']);
-Route::get('reports/exam',                           [ReportController::class, 'exam']);
-Route::get('reports/income',                         [FinanceReportController::class, 'income']);
-Route::get('reports/expense',                        [FinanceReportController::class, 'expense']);
-Route::get('reports/balance',                        [FinanceReportController::class, 'balance']);
-Route::get('reports/library',                        [ReportController::class, 'library']);
-Route::get('reports/inventory',                      [ReportController::class, 'inventory']);
-Route::get('reports/alumni',                         [ReportController::class, 'alumni']);
+Route::get('reports/student',                        [ReportController::class, 'student'])->name('reports.student');
+Route::get('reports/fee',                            [ReportController::class, 'fee'])->name('reports.fee');
+Route::get('reports/attendance',                     [ReportController::class, 'attendance'])->name('reports.attendance');
+Route::get('reports/exam',                           [ReportController::class, 'exam'])->name('reports.exam');
+Route::get('reports/income',                         [FinanceReportController::class, 'income'])->name('reports.income');
+Route::get('reports/expense',                        [FinanceReportController::class, 'expense'])->name('reports.expense');
+Route::get('reports/balance',                        [FinanceReportController::class, 'balance'])->name('reports.balance');
+Route::get('reports/library',                        [ReportController::class, 'library'])->name('reports.library');
+Route::get('reports/inventory',                      [ReportController::class, 'inventory'])->name('reports.inventory');
+Route::get('reports/alumni',                         [ReportController::class, 'alumni'])->name('reports.alumni');
 
 // Cron & webhooks admin views
 Route::resource('cron',                              CronController::class);

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\Staff;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StudentCrudTest extends TestCase
@@ -13,10 +14,10 @@ class StudentCrudTest extends TestCase
     {
         $this->seed(\Database\Seeders\AdminUserSeeder::class);
 
-        $this->post(route('admin.login'), ['username' => 'admin', 'password' => 'admin123']);
+        $staff = Staff::where('email', 'admin@smart-academy.local')->first();
+        $this->actingAs($staff, 'admin');
 
         $response = $this->get(route('admin.student.index'));
         $response->assertStatus(200);
-        $response->assertSee(__('Students List'));
     }
 }

@@ -29,7 +29,7 @@ if (! function_exists('parseCsv')) {
 }
 
 if (! function_exists('writeCsv')) {
-    function writeCsv(string $filePath, array $rows, array $headers = null): bool
+    function writeCsv(string $filePath, array $rows, ?array $headers = null): bool
     {
         $handle = fopen($filePath, 'w');
         if ($handle === false) return false;

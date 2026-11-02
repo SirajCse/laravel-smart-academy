@@ -51,4 +51,10 @@ class DashboardController extends Controller
             'stats', 'chartLabels', 'chartValues', 'recentStudents', 'events'
         ));
     }
+
+    public function profile(Request $request)
+    {
+        $staff = auth('admin')->user();
+        return view('admin.profile', compact('staff'));
+    }
 }

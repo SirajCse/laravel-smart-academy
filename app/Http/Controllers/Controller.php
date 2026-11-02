@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
+
 /**
- * Base controller for all admin-side controllers.
+ * Base controller for all Smart Academy controllers.
  *
- * Replaces CI3's `Admin_Controller` base class. Provides shared
- * layout data, sidebar menu, theme skin, breadcrumb helpers, and
- * the `Customlib` service bound into the container.
- *
- * @package App\Http\Controllers
+ * Extends Laravel's BaseController to inherit the middleware() helper
+ * and AuthorizesRequests / ValidatesRequests traits.
  */
-abstract class Controller
+abstract class Controller extends BaseController
 {
-    //
+    use AuthorizesRequests, ValidatesRequests;
 }

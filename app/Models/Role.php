@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Spatie\Permission\Models\Role as SpatieRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
-class Role extends Model
+class Role extends SpatieRole
 {
-    use HasFactory, LogsActivity;
+//    use LogsActivity;
 
     protected $table = 'roles';
 
@@ -20,6 +20,7 @@ class Role extends Model
 
     protected $fillable = [
         'name',
+        'guard_name',
         'description',
         'is_active',
         'is_superadmin',
@@ -33,19 +34,8 @@ class Role extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['id'])
+            ->logOnly(['id', 'name'])
             ->logOnlyDirty()
             ->useLogName('roles');
     }
-
-    public function staffRoles()
-    {
-        return $this->hasMany(\App\Models\StaffRole::class, 'role_id');
-    }
-
-    public function permissions()
-    {
-        return $this->hasMany(\App\Models\RolePermission::class, 'role_id');
-    }
-
 }

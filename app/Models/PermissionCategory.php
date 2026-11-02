@@ -21,6 +21,7 @@ class PermissionCategory extends Model
     protected $fillable = [
         'name',
         'short_code',
+        'icon',
         'parent_id',
     ];
 
@@ -38,12 +39,16 @@ class PermissionCategory extends Model
 
     public function parent()
     {
-        return $this->belongsTo(\App\Models\PermissionCategory::class, 'parent_id');
+        return $this->belongsTo(PermissionCategory::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(PermissionCategory::class, 'parent_id');
     }
 
     public function rolePermissions()
     {
-        return $this->hasMany(\App\Models\RolePermission::class, 'permission_category_id');
+        return $this->hasMany(RolePermission::class, 'permission_category_id');
     }
-
 }

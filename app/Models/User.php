@@ -4,12 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Model
+class User extends Authenticatable
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, HasApiTokens, Notifiable, HasRoles;
 
     protected $table = 'users';
 
@@ -41,6 +45,12 @@ class User extends Model
         'remember_token',
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'api_token',
+    ];
+
     protected $casts = [
         'user_id' => 'integer',
         'is_verified' => 'boolean',
@@ -49,6 +59,7 @@ class User extends Model
         'parent_id' => 'integer',
         'language_id' => 'integer',
         'last_login' => 'datetime',
+        'email_verified_at' => 'datetime',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -59,5 +70,14 @@ class User extends Model
             ->useLogName('users');
     }
 
-
+    /**
+     * Get the name used for password-based auth (AuthManager / StudentGuard).
+     * Falls back to username, then email.
+     */
+    public function findForPassport(string $identifier): ?self
+    {
+        return static::where('username', $identifier)
+            ->orWhere('email', $identifier)
+            ->first();
+    }
 }

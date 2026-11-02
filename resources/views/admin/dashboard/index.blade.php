@@ -31,7 +31,7 @@
         <div class="small-box bg-red">
             <div class="inner"><h3>{{ $stats['pending_fees'] ?? 0 }}</h3><p>{{ __('Pending Fees') }}</p></div>
             <div class="icon"><i class="fa fa-exclamation-circle"></i></div>
-            <a href="{{ route('reports.fee') }}" class="small-box-footer">{{ __('View Report') }} <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('admin.reports.fee') }}" class="small-box-footer">{{ __('View Report') }} <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>

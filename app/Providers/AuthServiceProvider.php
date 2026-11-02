@@ -12,31 +12,44 @@ use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
-	protected $policies = [
-		// \App\Models\Student::class => \App\Policies\StudentPolicy::class,
-	];
+    protected $policies = [
+        // \App\Models\Student::class => \App\Policies\StudentPolicy::class,
+    ];
 
-	public function boot(): void
-	{
-		$this->registerPolicies();
+    public function boot(): void
+    {
+        $this->registerPolicies();
 
-		// Super Admin (role id 7) bypasses every permission check.
-		Gate::before(function (?Authenticatable $user, string $ability) {
-			return $user && app(RbacService::class)->isSuperAdmin($user) ? true : null;
-		});
+        // Super-admin bypass — checked against the currently active guard's user.
+        Gate::before(function (?Authenticatable $user, string $ability) {
+            if ($user instanceof \App\Models\Staff && app(RbacService::class)->isSuperAdmin($user)) {
+                return true;
+            }
 
-		Auth::extend('admin', fn ($app, string $name, array $config) => new AdminGuard(
-			Auth::createUserProvider($config['provider'] ?? 'users'),
-			$app['request'],
-			$app['session.store'],
-			$name
-		));
+            $staff = Auth::guard('admin')->user();
+            if ($staff instanceof \App\Models\Staff && app(RbacService::class)->isSuperAdmin($staff)) {
+                return true;
+            }
 
-		Auth::extend('student', fn ($app, string $name, array $config) => new StudentGuard(
-			Auth::createUserProvider($config['provider'] ?? 'students'),
-			$app['request'],
-			$app['session.store'],
-			$name
-		));
-	}
+            return null;
+        });
+
+        Auth::extend('admin', function ($app, string $name, array $config) {
+            return new AdminGuard(
+                Auth::createUserProvider($config['provider'] ?? 'staff'),
+                $app->make('request'),
+                $app->make('session.store'),
+                $name,
+            );
+        });
+
+        Auth::extend('student', function ($app, string $name, array $config) {
+            return new StudentGuard(
+                Auth::createUserProvider($config['provider'] ?? 'users'),
+                $app->make('request'),
+                $app->make('session.store'),
+                $name,
+            );
+        });
+    }
 }

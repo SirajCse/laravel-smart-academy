@@ -12,22 +12,18 @@ use Illuminate\Support\Facades\Hash;
 /**
  * Custom session-based guard for students/parents (replaces CI3's
  * `$this->session->userdata('student')` blob).
- *
- * Same shape as AdminGuard but stores the student under a separate
- * session key so dual-login scenarios (parent viewing child record)
- * are possible.
  */
 class StudentGuard implements Guard
 {
     use GuardHelpers;
 
     public function __construct(
-        protected UserProvider $provider,
+        UserProvider $provider,
         protected Request $request,
         protected Session $session,
-        string $name = 'student',
+        protected string $name = 'student',
     ) {
-        $this->name = $name;
+        $this->provider = $provider;
     }
 
     public function user()
@@ -49,20 +45,23 @@ class StudentGuard implements Guard
             return false;
         }
 
-        $user = $this->provider->retrieveByCredentials($credentials);
-        if (! $user) return false;
-
-        // Support legacy plain-text passwords (auto-upgrade on first login).
-        if (Hash::needsRehash($user->getAuthPassword())) {
-            return $user->getAuthPassword() === $credentials['password'];
+        $user = $this->provider->retrieveByCredentials(['username' => $credentials['username']]);
+        if (! $user) {
+            $user = $this->provider->retrieveByCredentials(['email' => $credentials['username']]);
         }
+
+        if (! $user) return false;
 
         return Hash::check($credentials['password'], $user->getAuthPassword());
     }
 
     public function attempt(array $credentials = [], $remember = false): bool
     {
-        $user = $this->provider->retrieveByCredentials($credentials);
+        $user = $this->provider->retrieveByCredentials(['username' => $credentials['username']]);
+        if (! $user) {
+            $user = $this->provider->retrieveByCredentials(['email' => $credentials['username']]);
+        }
+
         if (! $user) return false;
 
         // Support auto-upgrade of legacy plain-text passwords.
@@ -96,4 +95,6 @@ class StudentGuard implements Guard
         $this->session->remove('login_student_id');
         $this->user = null;
     }
+
+
 }

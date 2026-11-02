@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\{
     SchSetting,
-    Session as SchoolSession,
+    SchoolSession,
     Language,
     Currency,
     StudentSession,

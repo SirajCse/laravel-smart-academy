@@ -4,12 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Permission\Traits\HasRoles;
 
-class Staff extends Model
+class Staff extends Authenticatable
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, HasApiTokens, Notifiable, HasRoles;
 
     protected $table = 'staff';
 
@@ -17,6 +21,8 @@ class Staff extends Model
 
     public $incrementing = true;
     public $timestamps = true;
+
+    protected $guard_name = 'admin';
 
     protected $fillable = [
         'staff_id',
@@ -54,6 +60,14 @@ class Staff extends Model
         'work_shift',
         'work_location',
         'is_active',
+        'password',
+        'last_login',
+        'language_id',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     protected $casts = [
@@ -65,6 +79,8 @@ class Staff extends Model
         'salary' => 'decimal:2',
         'basic_salary' => 'decimal:2',
         'is_active' => 'boolean',
+        'last_login' => 'datetime',
+        'language_id' => 'integer',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -73,6 +89,27 @@ class Staff extends Model
             ->logOnly(['id'])
             ->logOnlyDirty()
             ->useLogName('staff');
+    }
+
+    /**
+     * Polymorphic login-credentials lookup.
+     * Replaces CI3's Staff_model::checkLogin(email/phone/staff_id, password).
+     */
+    public function findForPassport(string $identifier): ?self
+    {
+        return static::where('email', $identifier)
+            ->orWhere('phone', $identifier)
+            ->orWhere('staff_id', $identifier)
+            ->first();
+    }
+
+    /**
+     * Spatie permissions for this staff member.
+     * Overridden because Staff has its own staff_roles M:N table.
+     */
+    public function staffRoles()
+    {
+        return $this->hasMany(StaffRole::class, 'staff_id');
     }
 
     public function department()
@@ -85,14 +122,11 @@ class Staff extends Model
         return $this->belongsTo(\App\Models\Designation::class, 'designation_id');
     }
 
-    public function roles()
+    /**
+     * Override roles() to use the staff_roles pivot + Role model.
+     */
+    public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->hasMany(\App\Models\StaffRole::class, 'staff_id');
+        return $this->belongsToMany(Role::class, 'staff_roles', 'staff_id', 'role_id');
     }
-
-    public function attendances()
-    {
-        return $this->hasMany(\App\Models\StaffAttendance::class, 'staff_id');
-    }
-
 }

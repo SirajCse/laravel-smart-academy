@@ -80,9 +80,17 @@
 
             <ul class="sidebar-menu" data-widget="tree">
                 @foreach($menu as $item)
+                    @php
+                        $routeName = 'admin.' . $item->short_code . '.index';
+                        $altRouteName = 'admin.' . $item->short_code;
+                        $routeExists = \Illuminate\Support\Facades\Route::has($routeName) || \Illuminate\Support\Facades\Route::has($altRouteName);
+                        $href = $routeExists
+                            ? route(\Illuminate\Support\Facades\Route::has($routeName) ? $routeName : $altRouteName)
+                            : '#';
+                    @endphp
                     @if($item->children->isEmpty())
                         <li class="{{ isActiveMenu('admin.'.$item->short_code.'.*') }}">
-                            <a href="{{ route('admin.'.$item->short_code.'.index') }}">
+                            <a href="{{ $href }}">
                                 <i class="fa {{ $item->icon ?? 'fa-circle-o' }}"></i>
                                 <span>{{ __($item->name) }}</span>
                             </a>

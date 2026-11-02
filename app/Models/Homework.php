@@ -19,16 +19,9 @@ class Homework extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'class_id',
-        'section_id',
-        'subject_id',
-        'staff_id',
-        'homework_date',
-        'submit_date',
-        'marks',
-        'description',
-        'document',
-        'session_id',
+        'class_id', 'section_id', 'subject_id', 'staff_id',
+        'homework_date', 'submit_date', 'marks', 'description',
+        'document', 'session_id',
     ];
 
     protected $casts = [
@@ -36,10 +29,10 @@ class Homework extends Model
         'section_id' => 'integer',
         'subject_id' => 'integer',
         'staff_id' => 'integer',
+        'session_id' => 'integer',
         'homework_date' => 'date',
         'submit_date' => 'date',
         'marks' => 'decimal:2',
-        'session_id' => 'integer',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -74,5 +67,4 @@ class Homework extends Model
     {
         return $this->hasMany(\App\Models\HomeworkEvaluation::class, 'homework_id');
     }
-
 }

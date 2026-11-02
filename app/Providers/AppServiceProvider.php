@@ -74,6 +74,8 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.admin',    \App\Http\ViewComposers\AdminLayoutComposer::class);
         View::composer('layouts.student',  \App\Http\ViewComposers\StudentLayoutComposer::class);
         View::composer('layouts.front',    \App\Http\ViewComposers\FrontLayoutComposer::class);
+        // Also compose all front.* and auth.* views that depend on the layout variables
+        View::composer(['front.*', 'auth.*', 'errors.*'], \App\Http\ViewComposers\FrontLayoutComposer::class);
 
         // ─── Blade custom directives ────────────────────────────────
         // Port of:  if($this->rbac->hasPrivilege($cat, $perm))

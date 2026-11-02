@@ -43,7 +43,15 @@ class SchoolClass extends Model
 
     public function students()
     {
-        return $this->hasMany(\App\Models\Student::class, 'class_id');
+        // Students are linked to classes through student_session pivot
+        return $this->hasManyThrough(
+            \App\Models\Student::class,
+            \App\Models\StudentSession::class,
+            'class_id',
+            'id',
+            'id',
+            'student_id'
+        );
     }
 
 }
