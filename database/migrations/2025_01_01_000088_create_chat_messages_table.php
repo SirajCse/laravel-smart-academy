@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
-{{
+{
     public function up(): void
     {
         Schema::create('chat_messages', function (Blueprint $table) {
@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('sender_id')->nullable(false);
             $table->string('sender_type')->nullable(false);
             $table->boolean('is_read')->nullable(false)->default(0);
-            $table->datetime('created_at')->nullable(true);
             $table->timestamps();
         });
     }
