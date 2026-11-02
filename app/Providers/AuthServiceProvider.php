@@ -26,17 +26,17 @@ class AuthServiceProvider extends ServiceProvider
 		});
 
 		Auth::extend('admin', fn ($app, string $name, array $config) => new AdminGuard(
-			$name,
 			Auth::createUserProvider($config['provider'] ?? 'users'),
+			$app['request'],
 			$app['session.store'],
-			$app['request']
+			$name
 		));
 
 		Auth::extend('student', fn ($app, string $name, array $config) => new StudentGuard(
-			$name,
 			Auth::createUserProvider($config['provider'] ?? 'students'),
+			$app['request'],
 			$app['session.store'],
-			$app['request']
+			$name
 		));
 	}
 }

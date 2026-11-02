@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Facade;
+namespace App\Http\Controllers;
 
 /**
  * Base controller for all admin-side controllers.

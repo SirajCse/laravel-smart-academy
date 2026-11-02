@@ -26,6 +26,28 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Facade aliases (framework defaults are auto-registered by Laravel 12).
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        foreach ([
+            'Customlib'   => \App\Facades\Customlib::class,
+            'Rbac'        => \App\Facades\Rbac::class,
+            'Mailgateway' => \App\Facades\Mailgateway::class,
+            'Smsgateway'  => \App\Facades\Smsgateway::class,
+            'Media'       => \App\Facades\MediaStorage::class,
+            'ModuleLib'   => \App\Facades\ModuleLib::class,
+            'Slug'        => \App\Facades\Slug::class,
+            'DataTables'  => \Yajra\DataTables\Facades\DataTables::class,
+            'PDF'         => \Barryvdh\DomPDF\Facade\Pdf::class,
+            'Excel'       => \Maatwebsite\Excel\Facades\Excel::class,
+            'Captcha'     => \Mews\Captcha\Facades\Captcha::class,
+            'Activity'    => \Spatie\Activitylog\Facades\Activity::class,
+            'Socialite'   => \Laravel\Socialite\Facades\Socialite::class,
+        ] as $alias => $class) {
+            if (class_exists($class)) {
+                $loader->alias($alias, $class);
+            }
+        }
+
         // Bind the legacy Customlib "god class" as a singleton —
         // replaces the old CI3 $this->customlib.
         $this->app->singleton(Customlib::class, fn ($app) => new Customlib($app));

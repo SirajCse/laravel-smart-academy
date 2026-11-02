@@ -1,0 +1,248 @@
+diff --git a/app/Console/Kernel.php b/app/Console/Kernel.php
+deleted file mode 100644
+index 9bdea74..0000000
+--- a/app/Console/Kernel.php
++++ /dev/null
+@@ -1,12 +0,0 @@
+-<?php
+-
+-namespace App\Providers;
+-
+-use Illuminate\Console\Scheduling\Schedule;
+-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+-use Illuminate\Support\Facades\Artisan;
+-
+-class Kernel // extends \Illuminate\Foundation\Console\Kernel  (Laravel 12 uses bootstrap/app.php, kept for compat)
+-{
+-    //
+-}
+diff --git a/app/Http/Controllers/Controller.php b/app/Http/Controllers/Controller.php
+index 6545627..29c2159 100644
+--- a/app/Http/Controllers/Controller.php
++++ b/app/Http/Controllers/Controller.php
+@@ -1,6 +1,6 @@
+ <?php
+ 
+-use Illuminate\Support\Facades\Facade;
++namespace App\Http\Controllers;
+ 
+ /**
+  * Base controller for all admin-side controllers.
+diff --git a/app/Providers/AppServiceProvider.php b/app/Providers/AppServiceProvider.php
+index 6c73980..a9a3de0 100644
+--- a/app/Providers/AppServiceProvider.php
++++ b/app/Providers/AppServiceProvider.php
+@@ -26,6 +26,28 @@ class AppServiceProvider extends ServiceProvider
+      */
+     public function register(): void
+     {
++        // Facade aliases (framework defaults are auto-registered by Laravel 12).
++        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
++        foreach ([
++            'Customlib'   => \App\Facades\Customlib::class,
++            'Rbac'        => \App\Facades\Rbac::class,
++            'Mailgateway' => \App\Facades\Mailgateway::class,
++            'Smsgateway'  => \App\Facades\Smsgateway::class,
++            'Media'       => \App\Facades\MediaStorage::class,
++            'ModuleLib'   => \App\Facades\ModuleLib::class,
++            'Slug'        => \App\Facades\Slug::class,
++            'DataTables'  => \Yajra\DataTables\Facades\DataTables::class,
++            'PDF'         => \Barryvdh\DomPDF\Facade\Pdf::class,
++            'Excel'       => \Maatwebsite\Excel\Facades\Excel::class,
++            'Captcha'     => \Mews\Captcha\Facades\Captcha::class,
++            'Activity'    => \Spatie\Activitylog\Facades\Activity::class,
++            'Socialite'   => \Laravel\Socialite\Facades\Socialite::class,
++        ] as $alias => $class) {
++            if (class_exists($class)) {
++                $loader->alias($alias, $class);
++            }
++        }
++
+         // Bind the legacy Customlib "god class" as a singleton —
+         // replaces the old CI3 $this->customlib.
+         $this->app->singleton(Customlib::class, fn ($app) => new Customlib($app));
+diff --git a/app/Providers/AuthServiceProvider.php b/app/Providers/AuthServiceProvider.php
+index ceb2c1f..a03d4c9 100644
+--- a/app/Providers/AuthServiceProvider.php
++++ b/app/Providers/AuthServiceProvider.php
+@@ -26,17 +26,17 @@ class AuthServiceProvider extends ServiceProvider
+ 		});
+ 
+ 		Auth::extend('admin', fn ($app, string $name, array $config) => new AdminGuard(
+-			$name,
+ 			Auth::createUserProvider($config['provider'] ?? 'users'),
++			$app['request'],
+ 			$app['session.store'],
+-			$app['request']
++			$name
+ 		));
+ 
+ 		Auth::extend('student', fn ($app, string $name, array $config) => new StudentGuard(
+-			$name,
+ 			Auth::createUserProvider($config['provider'] ?? 'students'),
++			$app['request'],
+ 			$app['session.store'],
+-			$app['request']
++			$name
+ 		));
+ 	}
+ }
+\ No newline at end of file
+diff --git a/app/Providers/RouteServiceProvider.php b/app/Providers/RouteServiceProvider.php
+index 7b48daa..2762338 100644
+--- a/app/Providers/RouteServiceProvider.php
++++ b/app/Providers/RouteServiceProvider.php
+@@ -33,14 +33,5 @@ class RouteServiceProvider extends ServiceProvider
+         RateLimiter::for('api', function (Request $request) {
+             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+         });
+-
+-        $this->routes(function (): void {
+-            Route::middleware('api')
+-                ->prefix('api')
+-                ->group(base_path('routes/api.php'));
+-
+-            Route::middleware('web')
+-                ->group(base_path('routes/web.php'));
+-        });
+     }
+ }
+diff --git a/bootstrap/providers.php b/bootstrap/providers.php
+new file mode 100644
+index 0000000..89430f6
+--- /dev/null
++++ b/bootstrap/providers.php
+@@ -0,0 +1,9 @@
++<?php
++
++return [
++    App\Providers\AppServiceProvider::class,
++    App\Providers\AuthServiceProvider::class,
++    App\Providers\EventServiceProvider::class,
++    App\Providers\RouteServiceProvider::class,
++    App\Providers\BroadcastServiceProvider::class,
++];
+diff --git a/composer.json b/composer.json
+index 976981a..041b0e8 100644
+--- a/composer.json
++++ b/composer.json
+@@ -62,9 +62,7 @@
+             "@php artisan package:discover --ansi"
+         ],
+         "post-update-cmd": [
+-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+-            "@php artisan ide-helper:generate",
+-            "@php artisan ide-helper:meta"
++            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+         ],
+         "post-root-package-install": [
+             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+diff --git a/config/app.php b/config/app.php
+index 8046e7b..fb6e77c 100644
+--- a/config/app.php
++++ b/config/app.php
+@@ -26,104 +26,4 @@ return [
+ 		'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
+ 		'store' => env('APP_MAINTENANCE_STORE', 'database'),
+ 	],
+-
+-	'providers' => [
+-		Illuminate\Broadcasting\BroadcastServiceProvider::class,
+-		Illuminate\Bus\BusServiceProvider::class,
+-		Illuminate\Cache\CacheServiceProvider::class,
+-		Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
+-		Illuminate\Cookie\CookieServiceProvider::class,
+-		Illuminate\Database\DatabaseServiceProvider::class,
+-		Illuminate\Encryption\EncryptionServiceProvider::class,
+-		Illuminate\Filesystem\FilesystemServiceProvider::class,
+-		Illuminate\Foundation\Providers\FoundationServiceProvider::class,
+-		Illuminate\Hashing\HashServiceProvider::class,
+-		Illuminate\Mail\MailServiceProvider::class,
+-		Illuminate\Notifications\NotificationServiceProvider::class,
+-		Illuminate\Pagination\PaginationServiceProvider::class,
+-		Illuminate\Pipeline\PipelineServiceProvider::class,
+-		Illuminate\Queue\QueueServiceProvider::class,
+-		Illuminate\Redis\RedisServiceProvider::class,
+-		Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
+-		Illuminate\Session\SessionServiceProvider::class,
+-		Illuminate\Translation\TranslationServiceProvider::class,
+-		Illuminate\Validation\ValidationServiceProvider::class,
+-		Illuminate\View\ViewServiceProvider::class,
+-
+-		// ─── Smart Academy providers ──────────────────────────────
+-		App\Providers\AppServiceProvider::class,
+-		App\Providers\AuthServiceProvider::class,
+-		App\Providers\EventServiceProvider::class,
+-		App\Providers\RouteServiceProvider::class,
+-		App\Providers\BroadcastServiceProvider::class,
+-
+-		// ─── Third-party packages ─────────────────────────────────
+-		Spatie\Permission\PermissionServiceProvider::class,
+-		Yajra\DataTables\DataTablesServiceProvider::class,
+-		Barryvdh\DomPDF\ServiceProvider::class,
+-		Maatwebsite\Excel\ExcelServiceProvider::class,
+-		Mews\Captcha\CaptchaServiceProvider::class,
+-		Spatie\Activitylog\ActivitylogServiceProvider::class,
+-		Spatie\MediaLibrary\MediaLibraryServiceProvider::class,
+-		Laravel\Socialite\SocialiteServiceProvider::class,
+-	],
+-
+-	'aliases' => [
+-		'App' => Illuminate\Support\Facades\App::class,
+-		'Arr' => Illuminate\Support\Arr::class,
+-		'Artisan' => Illuminate\Support\Facades\Artisan::class,
+-		'Auth' => Illuminate\Support\Facades\Auth::class,
+-		'Blade' => Illuminate\Support\Facades\Blade::class,
+-		'Broadcast' => Illuminate\Support\Facades\Broadcast::class,
+-		'Bus' => Illuminate\Support\Facades\Bus::class,
+-		'Cache' => Illuminate\Support\Facades\Cache::class,
+-		'Config' => Illuminate\Support\Facades\Config::class,
+-		'Cookie' => Illuminate\Support\Facades\Cookie::class,
+-		'Crypt' => Illuminate\Support\Facades\Crypt::class,
+-		'DB' => Illuminate\Support\Facades\DB::class,
+-		'Eloquent' => Illuminate\Database\Eloquent\Model::class,
+-		'Event' => Illuminate\Support\Facades\Event::class,
+-		'File' => Illuminate\Support\Facades\File::class,
+-		'Gate' => Illuminate\Support\Facades\Gate::class,
+-		'Hash' => Illuminate\Support\Facades\Hash::class,
+-		'Http' => Illuminate\Support\Facades\Http::class,
+-		'Js' => Illuminate\Support\Js::class,
+-		'Lang' => Illuminate\Support\Facades\Lang::class,
+-		'Log' => Illuminate\Support\Facades\Log::class,
+-		'Mail' => Illuminate\Support\Facades\Mail::class,
+-		'Notification' => Illuminate\Support\Facades\Notification::class,
+-		'Password' => Illuminate\Support\Facades\Password::class,
+-		'Queue' => Illuminate\Support\Facades\Queue::class,
+-		'RateLimiter' => Illuminate\Support\Facades\RateLimiter::class,
+-		'Redirect' => Illuminate\Support\Facades\Redirect::class,
+-		'Redis' => Illuminate\Support\Facades\Redis::class,
+-		'Request' => Illuminate\Support\Facades\Request::class,
+-		'Response' => Illuminate\Support\Facades\Response::class,
+-		'Route' => Illuminate\Support\Facades\Route::class,
+-		'Schema' => Illuminate\Support\Facades\Schema::class,
+-		'Session' => Illuminate\Support\Facades\Session::class,
+-		'Storage' => Illuminate\Support\Facades\Storage::class,
+-		'Str' => Illuminate\Support\Str::class,
+-		'URL' => Illuminate\Support\Facades\URL::class,
+-		'Validator' => Illuminate\Support\Facades\Validator::class,
+-		'View' => Illuminate\Support\Facades\View::class,
+-
+-		// Smart Academy aliases (replaces CI3 $this->load->library(...))
+-		'Customlib' => \App\Facades\Customlib::class,
+-		'Rbac' => \App\Facades\Rbac::class,
+-		'Mailgateway' => \App\Facades\Mailgateway::class,
+-		'Smsgateway' => \App\Facades\Smsgateway::class,
+-		'Media' => \App\Facades\MediaStorage::class,
+-		'ModuleLib' => \App\Facades\ModuleLib::class,
+-		'Slug' => \App\Facades\Slug::class,
+-
+-		// Datatables facade
+-		'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+-		'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
+-		'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+-		'Image' => Intervention\Image\Facades\Image::class,
+-		'Captcha' => Mews\Captcha\Facades\Captcha::class,
+-		'Activity' => Spatie\Activitylog\Facades\Activity::class,
+-		'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+-	],
+ ];
