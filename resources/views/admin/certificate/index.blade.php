@@ -49,7 +49,9 @@
                 @endforelse
             </tbody>
         </table>
-        {{ $records->withQueryString()->links() }}
+        @if($records instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            { $records->withQueryString()->links() }
+        @endif
     </div>
 </div>
 @endsection

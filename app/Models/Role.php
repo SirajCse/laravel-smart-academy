@@ -9,21 +9,15 @@ use Spatie\Activitylog\LogOptions;
 
 class Role extends SpatieRole
 {
-//    use LogsActivity;
+    use HasFactory, LogsActivity;
 
     protected $table = 'roles';
-
     protected $primaryKey = 'id';
-
     public $incrementing = true;
     public $timestamps = true;
 
     protected $fillable = [
-        'name',
-        'guard_name',
-        'description',
-        'is_active',
-        'is_superadmin',
+        'name', 'guard_name', 'description', 'is_active', 'is_superadmin',
     ];
 
     protected $casts = [

@@ -20,7 +20,6 @@ class LanguageSeeder extends Seeder
             ['language' => 'Urdu',     'short_code' => 'ur', 'is_active' => 1, 'is_rtl' => 1],
             ['language' => 'Chinese',  'short_code' => 'zh', 'is_active' => 1, 'is_rtl' => 0],
         ];
-
         foreach ($languages as $lang) Language::create($lang);
     }
 }

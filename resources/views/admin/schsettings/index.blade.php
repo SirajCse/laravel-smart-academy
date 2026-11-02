@@ -73,20 +73,6 @@
                 <label>{{ __('Copyright Text') }}</label>
                 <input type="text" name="copyright" class="form-control" value="{{ old('copyright', $record->copyright) }}">
             </div>
-            <div class="row">
-                <div class="col-md-4 form-group">
-                    <label>{{ __('YouTube URL') }}</label>
-                    <input type="url" name="youtube_url" class="form-control" value="{{ old('youtube_url', $record->youtube_url) }}">
-                </div>
-                <div class="col-md-4 form-group">
-                    <label>{{ __('Facebook URL') }}</label>
-                    <input type="url" name="facebook_url" class="form-control" value="{{ old('facebook_url', $record->facebook_url) }}">
-                </div>
-                <div class="col-md-4 form-group">
-                    <label>{{ __('Twitter URL') }}</label>
-                    <input type="url" name="twitter_url" class="form-control" value="{{ old('twitter_url', $record->twitter_url) }}">
-                </div>
-            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> {{ __('Save Settings') }}</button>
                 <a href="{{ route('admin.schsettings.backup') }}" class="btn btn-default"><i class="fa fa-database"></i> {{ __('Backup') }}</a>

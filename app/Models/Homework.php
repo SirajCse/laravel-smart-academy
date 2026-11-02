@@ -12,9 +12,7 @@ class Homework extends Model
     use HasFactory, LogsActivity;
 
     protected $table = 'homework';
-
     protected $primaryKey = 'id';
-
     public $incrementing = true;
     public $timestamps = true;
 
@@ -25,46 +23,21 @@ class Homework extends Model
     ];
 
     protected $casts = [
-        'class_id' => 'integer',
-        'section_id' => 'integer',
-        'subject_id' => 'integer',
-        'staff_id' => 'integer',
+        'class_id' => 'integer', 'section_id' => 'integer',
+        'subject_id' => 'integer', 'staff_id' => 'integer',
         'session_id' => 'integer',
-        'homework_date' => 'date',
-        'submit_date' => 'date',
+        'homework_date' => 'date', 'submit_date' => 'date',
         'marks' => 'decimal:2',
     ];
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()
-            ->logOnly(['id'])
-            ->logOnlyDirty()
-            ->useLogName('homework');
+        return LogOptions::defaults()->logOnly(['id'])->logOnlyDirty()->useLogName('homework');
     }
 
-    public function class()
-    {
-        return $this->belongsTo(\App\Models\SchoolClass::class, 'class_id');
-    }
-
-    public function section()
-    {
-        return $this->belongsTo(\App\Models\Section::class, 'section_id');
-    }
-
-    public function subject()
-    {
-        return $this->belongsTo(\App\Models\Subject::class, 'subject_id');
-    }
-
-    public function staff()
-    {
-        return $this->belongsTo(\App\Models\Staff::class, 'staff_id');
-    }
-
-    public function evaluations()
-    {
-        return $this->hasMany(\App\Models\HomeworkEvaluation::class, 'homework_id');
-    }
+    public function class() { return $this->belongsTo(\App\Models\SchoolClass::class, 'class_id'); }
+    public function section() { return $this->belongsTo(\App\Models\Section::class, 'section_id'); }
+    public function subject() { return $this->belongsTo(\App\Models\Subject::class, 'subject_id'); }
+    public function staff() { return $this->belongsTo(\App\Models\Staff::class, 'staff_id'); }
+    public function evaluations() { return $this->hasMany(\App\Models\HomeworkEvaluation::class, 'homework_id'); }
 }

@@ -36,7 +36,6 @@ class PermissionCategorySeeder extends Seeder
             ['name' => 'Addons',          'short_code' => 'addons',         'parent_id' => null, 'icon' => 'fa-puzzle-piece'],
             ['name' => 'Communicate',     'short_code' => 'communicate',    'parent_id' => null, 'icon' => 'fa-envelope'],
         ];
-
         foreach ($categories as $cat) PermissionCategory::create($cat);
     }
 }

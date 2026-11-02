@@ -8,13 +8,14 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Add guard_name column to roles (Spatie requirement)
         Schema::table('roles', function (Blueprint $table) {
             if (! Schema::hasColumn('roles', 'guard_name')) {
                 $table->string('guard_name')->default('admin')->after('name');
             }
         });
 
-        // Spatie permission also needs permissions + pivot tables
+        // Create Spatie permissions table
         if (! Schema::hasTable('permissions')) {
             Schema::create('permissions', function (Blueprint $table) {
                 $table->id();

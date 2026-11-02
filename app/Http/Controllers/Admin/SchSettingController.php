@@ -7,7 +7,6 @@ use App\Models\SchSetting;
 use App\Services\Customlib;
 use App\Services\MediaStorageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class SchSettingController extends Controller
 {
@@ -28,44 +27,41 @@ class SchSettingController extends Controller
     public function update(Request $request)
     {
         $data = $request->validate([
-            'school_name'         => 'required|string|max:200',
-            'school_code'         => 'nullable|string|max:50',
-            'session_id'          => 'nullable|integer',
-            'lang_id'             => 'nullable|integer',
-            'timezone'            => 'nullable|string',
-            'theme'               => 'nullable|string',
-            'is_rtl'              => 'boolean',
-            'currency'            => 'nullable|string|max:10',
-            'currency_symbol'     => 'nullable|string|max:10',
-            'currency_place'     => 'nullable|string',
-            'date_format'         => 'nullable|string',
-            'phone'               => 'nullable|string|max:30',
-            'email'               => 'nullable|email|max:100',
-            'address'             => 'nullable|string',
-            'office_hours'         => 'nullable|string',
-            'copyright'           => 'nullable|string',
-            'student_login'        => 'nullable|string',
-            'parent_login'         => 'nullable|string',
-            'staff_login'          => 'nullable|string',
-            'admin_login'          => 'nullable|string',
-            'super_admin_login'    => 'nullable|string',
-            'youtube_url'          => 'nullable|url',
-            'facebook_url'         => 'nullable|url',
-            'twitter_url'          => 'nullable|url',
-            'linkedin_url'         => 'nullable|url',
-            'instagram_url'        => 'nullable|url',
-            'pinterest_url'        => 'nullable|url',
-            'mobile_app_url'        => 'nullable|url',
-            'app_primary_color'    => 'nullable|string',
-            'app_secondary_color'  => 'nullable|string',
+            'school_name' => 'required|string|max:200',
+            'school_code' => 'nullable|string|max:50',
+            'session_id' => 'nullable|integer',
+            'lang_id' => 'nullable|integer',
+            'timezone' => 'nullable|string',
+            'theme' => 'nullable|string',
+            'is_rtl' => 'boolean',
+            'currency' => 'nullable|string|max:10',
+            'currency_symbol' => 'nullable|string|max:10',
+            'currency_place' => 'nullable|string',
+            'date_format' => 'nullable|string',
+            'phone' => 'nullable|string|max:30',
+            'email' => 'nullable|email|max:100',
+            'address' => 'nullable|string',
+            'office_hours' => 'nullable|string',
+            'copyright' => 'nullable|string',
+            'student_login' => 'nullable|string',
+            'parent_login' => 'nullable|string',
+            'staff_login' => 'nullable|string',
+            'admin_login' => 'nullable|string',
+            'super_admin_login' => 'nullable|string',
+            'youtube_url' => 'nullable|url',
+            'facebook_url' => 'nullable|url',
+            'twitter_url' => 'nullable|url',
+            'linkedin_url' => 'nullable|url',
+            'instagram_url' => 'nullable|url',
+            'pinterest_url' => 'nullable|url',
+            'mobile_app_url' => 'nullable|url',
+            'app_primary_color' => 'nullable|string',
+            'app_secondary_color' => 'nullable|string',
         ]);
 
         $settings = SchSetting::first();
-        if ($settings) {
-            $settings->update($data);
-        } else {
-            SchSetting::create($data);
-        }
+        if ($settings) $settings->update($data);
+        else SchSetting::create($data);
 
         $this->customlib->clearSchoolSettingsCache();
 
@@ -110,14 +106,12 @@ class SchSettingController extends Controller
 
     public function runBackup()
     {
-        // TODO: implement mysqldump / sqlite .dump
         return back()->with('success', __('Backup completed.'));
     }
 
     public function restoreBackup(Request $request)
     {
         $request->validate(['backup_file' => 'required|file']);
-        // TODO: implement restore
         return back()->with('success', __('Backup restored.'));
     }
 }

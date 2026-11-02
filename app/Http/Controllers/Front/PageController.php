@@ -11,24 +11,15 @@ class PageController extends Controller
 {
     public function __construct(private Customlib $customlib) {}
 
-    /**
-     * Public site home page.
-     * Replaces CI3 controllers/Welcome.php::index().
-     */
     public function home()
     {
         $pages = FrontcmsPage::where('is_active', 1)->latest()->limit(3)->get();
         $slides = FrontcmsPage::where('is_active', 1)->whereNotNull('image')->latest()->limit(5)->get();
         $events = Holiday::where('from_date', '>=', today())->limit(5)->get();
         $welcomeText = $this->customlib->getSchoolSettings()->school_name;
-
         return view('front.home', compact('pages', 'slides', 'events', 'welcomeText'));
     }
 
-    /**
-     * Read a single front-CMS page by slug.
-     * Replaces CI3 controllers/Welcome.php::readPage().
-     */
     public function read(string $slug)
     {
         $page = FrontcmsPage::where('slug', $slug)->where('is_active', 1)->firstOrFail();

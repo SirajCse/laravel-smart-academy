@@ -16,7 +16,6 @@ class AttendenceTypeSeeder extends Seeder
             ['name' => 'Half Day', 'short_code' => 'H', 'is_active' => 1],
             ['name' => 'Holiday',  'short_code' => 'O', 'is_active' => 1],
         ];
-
         foreach ($types as $t) AttendenceType::create($t);
     }
 }

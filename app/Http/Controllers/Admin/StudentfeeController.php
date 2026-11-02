@@ -19,13 +19,11 @@ class StudentfeeController extends Controller
     public function index(Request $request)
     {
         $query = StudentFeesMaster::with(['studentSession.student', 'feeSessionGroup.groupType.type']);
-
         if ($request->has('student_id')) {
             $query->whereHas('studentSession', function ($q) use ($request) {
                 $q->where('student_id', $request->student_id);
             });
         }
-
         $records = $query->latest()->paginate(25);
         return view('admin.student-fee.index', compact('records'));
     }
@@ -39,14 +37,13 @@ class StudentfeeController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'student_session_id'   => 'required|integer',
+            'student_session_id' => 'required|integer',
             'fee_session_group_id' => 'required|integer',
-            'amount'                => 'required|numeric',
-            'discount_amount'      => 'nullable|numeric',
+            'amount' => 'required|numeric',
+            'discount_amount' => 'nullable|numeric',
         ]);
-        $record = StudentFeesMaster::create($data);
-        return redirect()->route('admin.student-fee.index')
-            ->with('success', __('Fee record created.'));
+        StudentFeesMaster::create($data);
+        return redirect()->route('admin.student-fee.index')->with('success', __('Fee record created.'));
     }
 
     public function show(StudentFeesMaster $student_fee)
@@ -65,44 +62,38 @@ class StudentfeeController extends Controller
     public function update(Request $request, StudentFeesMaster $student_fee)
     {
         $student_fee->update($request->all());
-        return redirect()->route('admin.student-fee.index')
-            ->with('success', __('Fee record updated.'));
+        return redirect()->route('admin.student-fee.index')->with('success', __('Fee record updated.'));
     }
 
     public function destroy(StudentFeesMaster $student_fee)
     {
         $student_fee->delete();
-        return redirect()->route('admin.student-fee.index')
-            ->with('success', __('Fee record deleted.'));
+        return redirect()->route('admin.student-fee.index')->with('success', __('Fee record deleted.'));
     }
 
     public function collect(Request $request, int $id)
     {
         $data = $request->validate([
-            'amount'           => 'required|numeric|min:0.01',
-            'payment_mode'     => 'required|string',
-            'description'      => 'nullable|string',
-            'date'             => 'required|date',
+            'amount' => 'required|numeric|min:0.01',
+            'payment_mode' => 'required|string',
+            'description' => 'nullable|string',
+            'date' => 'required|date',
         ]);
-
         try {
             DB::beginTransaction();
-
             $master = StudentFeesMaster::findOrFail($id);
             $fee = StudentFees::create([
                 'student_fees_master_id' => $master->id,
-                'amount'                  => $data['amount'],
-                'amount_discount'        => 0,
-                'amount_fine'            => 0,
-                'payment_mode'           => $data['payment_mode'],
-                'description'             => $data['description'] ?? null,
-                'date'                    => $data['date'],
-                'received_by'            => auth('admin')->id(),
-                'invoice_no'              => $this->customlib->generateInvoiceNumber('INV'),
+                'amount' => $data['amount'],
+                'amount_discount' => 0,
+                'amount_fine' => 0,
+                'payment_mode' => $data['payment_mode'],
+                'description' => $data['description'] ?? null,
+                'date' => $data['date'],
+                'received_by' => auth('admin')->id(),
+                'invoice_no' => $this->customlib->generateInvoiceNumber('INV'),
             ]);
-
             event(new \App\Events\FeePaymentReceived($fee));
-
             DB::commit();
             return back()->with('success', __('Fee collected successfully.'));
         } catch (\Throwable $e) {

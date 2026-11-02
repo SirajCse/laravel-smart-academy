@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -16,58 +15,24 @@ class Staff extends Authenticatable
     use HasFactory, LogsActivity, HasApiTokens, Notifiable, HasRoles;
 
     protected $table = 'staff';
-
     protected $primaryKey = 'id';
-
     public $incrementing = true;
     public $timestamps = true;
-
     protected $guard_name = 'admin';
 
     protected $fillable = [
-        'staff_id',
-        'role',
-        'department_id',
-        'designation_id',
-        'name',
-        'email',
-        'phone',
-        'emergency_phone',
-        'gender',
-        'image',
-        'dob',
-        'joining_date',
-        'leaving_date',
-        'address',
-        'qualification',
-        'work_experience',
-        'note',
-        'facebook',
-        'twitter',
-        'linkedin',
-        'instagram',
-        'resume',
-        'joining_letter',
-        'documents',
-        'signature',
-        'salary',
-        'account_number',
-        'bank_name',
-        'ifsc_code',
-        'bank_branch',
-        'epf_number',
-        'basic_salary',
-        'work_shift',
-        'work_location',
-        'is_active',
-        'password',
-        'last_login',
-        'language_id',
+        'staff_id', 'role', 'department_id', 'designation_id',
+        'name', 'email', 'phone', 'emergency_phone', 'gender', 'image',
+        'dob', 'joining_date', 'leaving_date', 'address', 'qualification',
+        'work_experience', 'note', 'facebook', 'twitter', 'linkedin',
+        'instagram', 'resume', 'joining_letter', 'documents', 'signature',
+        'salary', 'account_number', 'bank_name', 'ifsc_code', 'bank_branch',
+        'epf_number', 'basic_salary', 'work_shift', 'work_location',
+        'is_active', 'password', 'last_login', 'language_id',
     ];
 
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password', 'remember_token',
     ];
 
     protected $casts = [
@@ -91,10 +56,6 @@ class Staff extends Authenticatable
             ->useLogName('staff');
     }
 
-    /**
-     * Polymorphic login-credentials lookup.
-     * Replaces CI3's Staff_model::checkLogin(email/phone/staff_id, password).
-     */
     public function findForPassport(string $identifier): ?self
     {
         return static::where('email', $identifier)
@@ -103,10 +64,6 @@ class Staff extends Authenticatable
             ->first();
     }
 
-    /**
-     * Spatie permissions for this staff member.
-     * Overridden because Staff has its own staff_roles M:N table.
-     */
     public function staffRoles()
     {
         return $this->hasMany(StaffRole::class, 'staff_id');
@@ -122,9 +79,6 @@ class Staff extends Authenticatable
         return $this->belongsTo(\App\Models\Designation::class, 'designation_id');
     }
 
-    /**
-     * Override roles() to use the staff_roles pivot + Role model.
-     */
     public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'staff_roles', 'staff_id', 'role_id');

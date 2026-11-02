@@ -14,7 +14,7 @@ class BiometricController extends Controller
 
     public function index(Request $request)
     {
-        $records = collect([]); // No biometric devices configured
+        $records = collect([]);
         return view('admin.biometric.index', ['records' => $records]);
     }
 

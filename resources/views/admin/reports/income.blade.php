@@ -1,13 +1,15 @@
 @extends('layouts.admin')
+
 @section('title', __('Income Report'))
 @section('content_header', __('Income Report'))
+
 @section('content')
 <div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{{ __('Income Report') }}</h3></div>
+    <div class="box-header with-border"><h3 class="box-title">{ __('Income Report') }</h3></div>
     <div class="box-body">
         <table class="table table-hover table-striped datatable">
             <thead>
-                <tr><th>#</th><th>{{ __('Reference') }}</th><th>{{ __('Date') }}</th><th>{{ __('Amount/Status') }}</th></tr>
+                <tr><th>#</th><th>{ __('Reference') }</th><th>{ __('Date') }</th><th>{ __('Amount/Status') }</th></tr>
             </thead>
             <tbody>
                 @forelse($records as $i => $record)
@@ -18,11 +20,13 @@
                     <td>{{ $record->amount ? formatCurrency($record->amount) : '-' }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="4" class="text-center text-muted">{{ __('No records found') }}</td></tr>
+                <tr><td colspan="4" class="text-center text-muted">{ __('No records found') }</td></tr>
                 @endforelse
             </tbody>
         </table>
-        {{ $records->withQueryString()->links() ?? '' }}
+        @if(isset($records) && $records instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            {{ $records->withQueryString()->links() }}
+        @endif
     </div>
 </div>
 @endsection

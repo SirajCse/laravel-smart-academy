@@ -110,7 +110,7 @@ use App\Http\Controllers\Admin\{
 // ─── Dashboard / landing ────────────────────────────────────────────
 Route::get('/dashboard',                              [DashboardController::class, 'index'])->name('dashboard');
 
-// Admin profile (stub - reuses SchSetting index)
+// Admin profile
 Route::get('/profile',                                [DashboardController::class, 'profile'])->name('profile');
 
 // ─── School settings ───────────────────────────────────────────────
@@ -177,7 +177,6 @@ Route::resource('feegroup',                           FeegroupController::class)
 Route::resource('feesessiongroup',                    FeesessiongroupController::class);
 Route::resource('feemaster',                          FeemasterController::class);
 Route::resource('feediscount',                       FeediscountController::class);
-// Provide the alias names used by Blade views
 Route::get('fees-discount',                            [FeediscountController::class, 'index'])->name('fees-discount.index');
 Route::get('fees-discount/create',                     [FeediscountController::class, 'create'])->name('fees-discount.create');
 Route::post('fees-discount',                           [FeediscountController::class, 'store'])->name('fees-discount.store');

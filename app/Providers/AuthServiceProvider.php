@@ -12,25 +12,20 @@ use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    protected $policies = [
-        // \App\Models\Student::class => \App\Policies\StudentPolicy::class,
-    ];
+    protected $policies = [];
 
     public function boot(): void
     {
         $this->registerPolicies();
 
-        // Super-admin bypass — checked against the currently active guard's user.
         Gate::before(function (?Authenticatable $user, string $ability) {
             if ($user instanceof \App\Models\Staff && app(RbacService::class)->isSuperAdmin($user)) {
                 return true;
             }
-
             $staff = Auth::guard('admin')->user();
             if ($staff instanceof \App\Models\Staff && app(RbacService::class)->isSuperAdmin($staff)) {
                 return true;
             }
-
             return null;
         });
 

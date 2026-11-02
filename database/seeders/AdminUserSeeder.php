@@ -11,12 +11,10 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ensure roles exist (RoleSeeder might not have run yet)
         if (Role::count() === 0) {
             $this->call(RoleSeeder::class);
         }
 
-        // Create super-admin staff record
         $staff = Staff::create([
             'name'         => 'Super Admin',
             'email'        => 'admin@smart-academy.local',
@@ -28,7 +26,6 @@ class AdminUserSeeder extends Seeder
             'language_id'  => 1,
         ]);
 
-        // Assign super-admin role via the staff_roles pivot
         $superAdminRole = Role::where('is_superadmin', 1)->first();
         if ($superAdminRole) {
             DB::table('staff_roles')->insert([
@@ -37,7 +34,6 @@ class AdminUserSeeder extends Seeder
             ]);
         }
 
-        // Create login user record (legacy CI3 behaviour)
         User::create([
             'role'        => 'admin',
             'username'    => 'admin',

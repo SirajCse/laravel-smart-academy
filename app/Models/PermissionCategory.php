@@ -12,17 +12,12 @@ class PermissionCategory extends Model
     use HasFactory, LogsActivity;
 
     protected $table = 'permission_category';
-
     protected $primaryKey = 'id';
-
     public $incrementing = true;
     public $timestamps = true;
 
     protected $fillable = [
-        'name',
-        'short_code',
-        'icon',
-        'parent_id',
+        'name', 'short_code', 'icon', 'parent_id',
     ];
 
     protected $casts = [

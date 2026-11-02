@@ -18,7 +18,6 @@ class RoleSeeder extends Seeder
             ['name' => 'Receptionist', 'guard_name' => 'admin', 'description' => 'Receptionist access',  'is_active' => 1, 'is_superadmin' => 0],
             ['name' => 'Parent',       'guard_name' => 'student', 'description' => 'Parent access',      'is_active' => 1, 'is_superadmin' => 0],
         ];
-
         foreach ($roles as $role) Role::create($role);
     }
 }

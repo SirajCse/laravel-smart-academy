@@ -68,17 +68,14 @@ class RbacService
         $staff ??= auth('admin')->user();
         if (! $staff) return false;
 
-        // 1. Spatie check: super-admin role name
         if ($staff->hasRole(config('permission.super_admin.role_name', 'Super Admin'))) {
             return true;
         }
 
-        // 2. Legacy check: role id 7 (super admin) attached to staff via staff_roles
         if ($staff->roles()->where('roles.id', self::SUPER_ADMIN_ROLE_ID)->exists()) {
             return true;
         }
 
-        // 3. is_superadmin flag check — any attached role with is_superadmin=1
         return $staff->roles()->where('roles.is_superadmin', 1)->exists();
     }
 

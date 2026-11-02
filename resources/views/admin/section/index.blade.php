@@ -1,15 +1,15 @@
 @extends('layouts.admin')
 
-@section('title', __('Sections'))
-@section('content_header', __('Manage Sections'))
+@section('title', __('Section'))
+@section('content_header', __('Manage Section'))
 
 @section('content')
 <div class="box box-primary">
     <div class="box-header with-border">
-        <h3 class="box-title">{{ __('Sections List') }}</h3>
+        <h3 class="box-title">{ __('Section List') }</h3>
         <div class="box-tools">
-            @can('section.create')
-                <a href="{{ route('admin.section.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> {{ __('Add Section') }}</a>
+            @can('admin.section.create')
+                <a href="{{ route('admin.section.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> { __('Add New') }</a>
             @endcan
         </div>
     </div>
@@ -18,25 +18,25 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>{{ __('Section') }}</th>
-                    <th>{{ __('Note') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    <th>{ __('Name') }</th>
+                    <th>{ __('Created') }</th>
+                    <th>{ __('Actions') }</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($records as $i => $record)
                 <tr>
                     <td>{{ $i+1 }}</td>
-                    <td>{{ $record->section }}</td>
-                    <td>{{ $record->note }}</td>
+                    <td>{{ $record->name ?? $record->title ?? $record->id }}</td>
+                    <td>{{ formatDate($record->created_at) }}</td>
                     <td>
                         <div class="btn-group">
                             <a href="{{ route('admin.section.show', $record) }}" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></a>
-                            @can('section.edit')
+                            @can('admin.section.edit')
                                 <a href="{{ route('admin.section.edit', $record) }}" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></a>
                             @endcan
-                            @can('section.delete')
-                                <form method="POST" action="{{ route('admin.section.destroy', $record) }}" style="display:inline-block;" onsubmit="return confirm('{{ __('Are you sure?') }}')">
+                            @can('admin.section.delete')
+                                <form method="POST" action="{{ route('admin.section.destroy', $record) }}" style="display:inline-block;" onsubmit="return confirm('{ __('Are you sure?') }')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
                                 </form>
@@ -45,11 +45,13 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="4" class="text-center text-muted">{{ __('No records found') }}</td></tr>
+                <tr><td colspan="4" class="text-center text-muted">{ __('No records found') }</td></tr>
                 @endforelse
             </tbody>
         </table>
-        {{ $records->withQueryString()->links() }}
+        @if($records instanceof \Illuminate\Pagination\LengthAwarePaginator)
+            { $records->withQueryString()->links() }
+        @endif
     </div>
 </div>
 @endsection

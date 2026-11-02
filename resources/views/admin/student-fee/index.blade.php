@@ -20,7 +20,6 @@
                     <td>{{ formatCurrency($record->discount_amount) }}</td>
                     <td>
                         <a href="{{ route('admin.student-fee.show', $record) }}" class="btn btn-xs btn-info"><i class="fa fa-eye"></i></a>
-                        <a href="{{ route('admin.student-fee.collect', $record->id) }}" class="btn btn-xs btn-success"><i class="fa fa-credit-card"></i> {{ __('Collect') }}</a>
                     </td>
                 </tr>
                 @empty

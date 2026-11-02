@@ -50,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Bind the legacy Customlib "god class" as a singleton —
         // replaces the old CI3 $this->customlib.
-        $this->app->singleton(Customlib::class, fn ($app) => new Customlib($app));
+        $this->app->singleton(Customlib::class, fn () => new Customlib());
 
         // Other service bindings (one per legacy CI3 library).
         $this->app->singleton(AuthManager::class);
@@ -74,7 +74,6 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.admin',    \App\Http\ViewComposers\AdminLayoutComposer::class);
         View::composer('layouts.student',  \App\Http\ViewComposers\StudentLayoutComposer::class);
         View::composer('layouts.front',    \App\Http\ViewComposers\FrontLayoutComposer::class);
-        // Also compose all front.* and auth.* views that depend on the layout variables
         View::composer(['front.*', 'auth.*', 'errors.*'], \App\Http\ViewComposers\FrontLayoutComposer::class);
 
         // ─── Blade custom directives ────────────────────────────────

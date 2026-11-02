@@ -50,7 +50,7 @@
             </tbody>
         </table>
         @if($records instanceof \Illuminate\Pagination\LengthAwarePaginator)
-            {{ $records->withQueryString()->links() }}
+            { $records->withQueryString()->links() }
         @endif
     </div>
 </div>

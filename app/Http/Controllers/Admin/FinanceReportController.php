@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\{Income, Expense};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class FinanceReportController extends Controller
 {
