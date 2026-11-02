@@ -5,6 +5,10 @@ return [
         'guard'     => 'web',
         'passwords' => 'users',
     ],
+	'guards' => [
+		'admin'   => ['driver' => 'admin',   'provider' => 'users'],
+		'student' => ['driver' => 'student', 'provider' => 'students'],
+	],
     'passwords' => [
         'users' => [
             'provider' => 'users',
