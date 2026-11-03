@@ -1,84 +1,91 @@
 @extends('layouts.admin')
 
 @section('title', __('School Settings'))
-@section('content_header', __('Manage School Settings'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <span>Settings</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{{ __('School Information') }}</h3></div>
-    <div class="box-body">
+<x-page-header title="School Settings" description="Configure your school's general information" />
+
+<x-card class="max-w-4xl">
+    <x-card-header>
+        <x-card-title>School Information</x-card-title>
+        <x-card-description>Update your school's basic information and contact details.</x-card-description>
+    </x-card-header>
+    <x-card-content>
         <form method="POST" action="{{ route('admin.schsettings.index') }}" enctype="multipart/form-data">
             @csrf
-            <div class="row">
-                <div class="col-md-6 form-group">
-                    <label>{{ __('School Name') }} <span class="text-red">*</span></label>
-                    <input type="text" name="school_name" class="form-control" value="{{ old('school_name', $record->school_name) }}" required>
-                </div>
-                <div class="col-md-6 form-group">
-                    <label>{{ __('School Code') }}</label>
-                    <input type="text" name="school_code" class="form-control" value="{{ old('school_code', $record->school_code) }}">
-                </div>
+
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="School Name" required>
+                    <x-input name="school_name" :value="$record->school_name" required />
+                </x-form-field>
+                <x-form-field label="School Code">
+                    <x-input name="school_code" :value="$record->school_code" />
+                </x-form-field>
+                <x-form-field label="Email">
+                    <x-input name="email" type="email" :value="$record->email" />
+                </x-form-field>
+                <x-form-field label="Phone">
+                    <x-input name="phone" :value="$record->phone" />
+                </x-form-field>
+                <x-form-field label="Currency">
+                    <x-input name="currency" :value="$record->currency" />
+                </x-form-field>
+                <x-form-field label="Currency Symbol">
+                    <x-input name="currency_symbol" :value="$record->currency_symbol" />
+                </x-form-field>
+                <x-form-field label="Date Format">
+                    <x-select name="date_format" :value="$record->date_format" :options="['d-m-Y' => 'd-m-Y', 'm-d-Y' => 'm-d-Y', 'Y-m-d' => 'Y-m-d', 'd/m/Y' => 'd/m/Y', 'm/d/Y' => 'm/d/Y', 'Y/m/d' => 'Y/m/d']" />
+                </x-form-field>
+                <x-form-field label="Theme">
+                    <x-select name="theme" :value="$record->theme" :options="['default' => 'Default', 'bold_blue' => 'Bold Blue', 'darkgray' => 'Dark Gray', 'material_pink' => 'Material Pink', 'shadow_white' => 'Shadow White', 'yellow' => 'Yellow']" />
+                </x-form-field>
+                <x-form-field label="Timezone">
+                    <x-input name="timezone" :value="$record->timezone" />
+                </x-form-field>
+                <x-form-field label="Office Hours">
+                    <x-input name="office_hours" :value="$record->office_hours" />
+                </x-form-field>
             </div>
-            <div class="row">
-                <div class="col-md-6 form-group">
-                    <label>{{ __('Email') }}</label>
-                    <input type="email" name="email" class="form-control" value="{{ old('email', $record->email) }}">
-                </div>
-                <div class="col-md-6 form-group">
-                    <label>{{ __('Phone') }}</label>
-                    <input type="text" name="phone" class="form-control" value="{{ old('phone', $record->phone) }}">
-                </div>
+
+            <x-form-field label="Address" class="mt-4">
+                <x-textarea name="address" :value="$record->address" rows="2" />
+            </x-form-field>
+
+            <x-form-field label="Copyright Text" class="mt-4">
+                <x-input name="copyright" :value="$record->copyright" />
+            </x-form-field>
+
+            <h3 class="mt-8 mb-4 text-lg font-semibold">Social Media</h3>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <x-form-field label="Facebook">
+                    <x-input name="facebook_url" :value="$record->facebook_url" placeholder="https://facebook.com/..." />
+                </x-form-field>
+                <x-form-field label="Twitter">
+                    <x-input name="twitter_url" :value="$record->twitter_url" placeholder="https://twitter.com/..." />
+                </x-form-field>
+                <x-form-field label="YouTube">
+                    <x-input name="youtube_url" :value="$record->youtube_url" placeholder="https://youtube.com/..." />
+                </x-form-field>
+                <x-form-field label="LinkedIn">
+                    <x-input name="linkedin_url" :value="$record->linkedin_url" placeholder="https://linkedin.com/..." />
+                </x-form-field>
+                <x-form-field label="Instagram">
+                    <x-input name="instagram_url" :value="$record->instagram_url" placeholder="https://instagram.com/..." />
+                </x-form-field>
+                <x-form-field label="Pinterest">
+                    <x-input name="pinterest_url" :value="$record->pinterest_url" placeholder="https://pinterest.com/..." />
+                </x-form-field>
             </div>
-            <div class="form-group">
-                <label>{{ __('Address') }}</label>
-                <textarea name="address" class="form-control" rows="2">{{ old('address', $record->address) }}</textarea>
-            </div>
-            <div class="row">
-                <div class="col-md-4 form-group">
-                    <label>{{ __('Currency') }}</label>
-                    <input type="text" name="currency" class="form-control" value="{{ old('currency', $record->currency) }}">
-                </div>
-                <div class="col-md-4 form-group">
-                    <label>{{ __('Currency Symbol') }}</label>
-                    <input type="text" name="currency_symbol" class="form-control" value="{{ old('currency_symbol', $record->currency_symbol) }}">
-                </div>
-                <div class="col-md-4 form-group">
-                    <label>{{ __('Date Format') }}</label>
-                    <select name="date_format" class="form-control">
-                        @foreach(['d-m-Y', 'm-d-Y', 'Y-m-d', 'd/m/Y', 'm/d/Y', 'Y/m/d'] as $fmt)
-                            <option value="{{ $fmt }}" @if($record->date_format === $fmt) selected @endif>{{ $fmt }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 form-group">
-                    <label>{{ __('Theme') }}</label>
-                    <select name="theme" class="form-control">
-                        @foreach(['default', 'bold_blue', 'darkgray', 'material_pink', 'shadow_white', 'yellow'] as $t)
-                            <option value="{{ $t }}" @if($record->theme === $t) selected @endif>{{ $t }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4 form-group">
-                    <label>{{ __('Timezone') }}</label>
-                    <input type="text" name="timezone" class="form-control" value="{{ old('timezone', $record->timezone) }}">
-                </div>
-                <div class="col-md-4 form-group">
-                    <label>{{ __('Office Hours') }}</label>
-                    <input type="text" name="office_hours" class="form-control" value="{{ old('office_hours', $record->office_hours) }}">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>{{ __('Copyright Text') }}</label>
-                <input type="text" name="copyright" class="form-control" value="{{ old('copyright', $record->copyright) }}">
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> {{ __('Save Settings') }}</button>
-                <a href="{{ route('admin.schsettings.backup') }}" class="btn btn-default"><i class="fa fa-database"></i> {{ __('Backup') }}</a>
-                <a href="{{ route('admin.schsettings.audit') }}" class="btn btn-info"><i class="fa fa-history"></i> {{ __('Audit Log') }}</a>
+
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save Settings</x-button>
+                <x-button :href="route('admin.schsettings.backup')" variant="outline"><i class="fa fa-database"></i> Backup</x-button>
+                <x-button :href="route('admin.schsettings.audit')" variant="ghost"><i class="fa fa-history"></i> Audit Log</x-button>
             </div>
         </form>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

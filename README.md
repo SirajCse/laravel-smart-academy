@@ -1,53 +1,21 @@
-# Smart Academy — Laravel 12 Edition
+# Smart Academy — Laravel 12 (Shadcn UI Edition)
 
-A complete migration of the CodeIgniter 3 [smart-academy](https://github.com/SirajCse/smart-academy) school management system to **Laravel 12**. All controllers, models, migrations, views, services, helpers, middleware, and assets have been ported.
-
----
-
-## ✨ What's in the box
-
-| Layer | Count | Notes |
-|-------|-------|-------|
-| **Migrations** | 103 | Covering 207 source tables (top 103 core tables modeled) |
-| **Eloquent Models** | 103 | With relationships, casts, fillable, activity logging |
-| **Admin Controllers** | 87 | Full resource controllers for every admin module |
-| **Student Portal Controllers** | 16 | Dashboard, fees, attendance, homework, etc. |
-| **API Controllers** | 15 | Sanctum-authenticated REST API for mobile app |
-| **Payment Gateway Controllers** | 9 | PayPal, Stripe, Paytm, Midtrans, Pesapal, Billplz, Mpesa, CcAvenue, 2Checkout |
-| **Front-CMS Controllers** | 7 | Pages, news, events, gallery, admission, calendar, exam results |
-| **Online Admission Controllers** | 4 | Form, payment, review, status |
-| **Middleware** | 8 | Auth (admin/student), RBAC, locale, timezone, maintenance, multi-branch, fee-lock, throttle |
-| **Service Classes** | 11 | Customlib, AuthManager, RbacService, MailgatewayService, SmsgatewayService (15+ providers), MediaStorageService, ModuleLibService, StudentModuleService, SlugService, PushnotificationService, PaymentGatewayService |
-| **Helper Functions** | 70+ | Across 8 helper files (custom, menu, customfield, csv, lang, mime, json_output, addon) |
-| **Blade Views** | 99+ | Including layouts (admin/student/front/auth), admin module CRUD views, student dashboard, front-CMS home + pages + admission |
-| **Facades** | 6 | Customlib, Rbac, Mailgateway, Smsgateway, MediaStorage, ModuleLib, Slug |
-| **Events / Listeners** | 4 / 4 | StudentEnrolled, FeePaymentReceived, AttendanceMarked, HomeworkAssigned |
-| **Mailables** | 2 | StaffPasswordReset, UserPasswordReset |
-| **Artisan Commands** | 3 | `smart-academy:install`, `smart-academy:hash-user-passwords`, `fees:reminder` |
-| **Routes** | 7 files | `web.php`, `admin.php`, `student.php`, `online_admission.php`, `gateway.php`, `front.php`, `api.php`, `console.php`, `channels.php` |
-| **Frontend Assets** | ~98 MB | AdminLTE 2.x, 24 plugins, 8 front-CMS themes, jQuery 2.2.4, Bootstrap 3.3.5, Font Awesome 4.5.0, fullCalendar, CKEditor, Select2, DataTables, etc. |
+A complete school management system built on **Laravel 12** with a **professional
+Shadcn-style admin UI** (Tailwind CSS + plain vanilla JS + DataTables — no Vue,
+no React, no SPA complexity).
 
 ---
 
-## 🛠 Tech Stack
+## ✨ Highlights
 
-- **PHP** 8.2+
-- **Laravel** 12.x
-- **MySQL** 5.7+ / MariaDB 10.3+
-- **AdminLTE** 2.3.0 (preserved from source — UI consistency)
-- **Spatie Permission** 6.x (RBAC)
-- **Yajra DataTables** 11.x (server-side tables)
-- **Barryvdh DomPDF** 3.x (PDF generation)
-- **Maatwebsite Excel** 3.x (CSV/Excel import-export)
-- **Intervention Image** 3.x (image resizing)
-- **Spatie Activity Log** 4.x (audit trail)
-- **Spatie Media Library** 11.x (file management)
-- **Mews Captcha** 3.x (CAPTCHA)
-- **Laravel Sanctum** 4.x (mobile API tokens)
-- **Laravel Socialite** 5.x (OAuth)
-- **mpdf/mpdf** 8.x (legacy PDF templates)
-- **Google API Client** 2.x (Firebase push notifications)
-- **League Omnipay** 3.x + PayPal/Stripe drivers (payment gateways)
+- 🎨 **Professional Shadcn UI** — Card / Button / Input / Select / Badge / Avatar / DataTable / StatCard components, all as anonymous Blade components
+- 🌗 **Dark mode** — toggle in the header, persists in localStorage
+- 📊 **Dashboard** — 4 stat cards + Chart.js charts (fee collection bar + attendance donut) + recent admissions table + upcoming events + quick actions
+- 📋 **DataTables** — every list page uses DataTables with search, sort, pagination, CSV/Excel/Print export buttons
+- 🗂️ **113 migrations** — full schema including Spatie permission tables + cache/sessions/jobs/password_reset_tokens
+- 🧪 **5/5 PHPUnit tests passing** + 127/127 admin routes return HTTP 200 in smoke test
+- 🌍 **9 languages** seeded by default (English, Arabic, Hindi, Bengali, Spanish, French, German, Urdu, Chinese)
+- 📱 **Responsive** — sidebar collapses on mobile, tables scroll horizontally, forms stack
 
 ---
 
@@ -55,329 +23,261 @@ A complete migration of the CodeIgniter 3 [smart-academy](https://github.com/Sir
 
 ```bash
 # 1. Extract the ZIP
-unzip laravel-smart-academy.zip
+unzip laravel-smart-academy-fixed.zip
 cd laravel-smart-academy
 
 # 2. Install PHP dependencies
-composer install --optimize-autoloader --no-dev
+composer install --no-dev --optimize-autoloader
 
-# 3. Install Node dependencies (optional, only if you want to recompile assets)
+# 3. (Optional) Build Tailwind CSS via Vite
 npm install
 npm run build
+# Or skip this — the layout auto-falls-back to CDN Tailwind if no build/ folder exists
 
 # 4. Configure environment
 cp .env.example .env
-# Edit .env — set DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD
-
-# 5. Generate application key
 php artisan key:generate
 
-# 6. Run the installer (migrate + storage link + seed)
-php artisan smart-academy:install
+# Edit .env — set your DB credentials:
+#   DB_CONNECTION=mysql
+#   DB_HOST=127.0.0.1
+#   DB_DATABASE=laravel_smart_academy
+#   DB_USERNAME=root
+#   DB_PASSWORD=
 
-# 7. Start the development server
+# 5. Migrate + seed
+php artisan migrate:fresh --seed
+
+# 6. Create storage symlink
+php artisan storage:link
+
+# 7. Start the dev server
 php artisan serve
-
-# 8. Visit http://localhost:8000/site/login
-#    Default admin:  admin / admin123
+# Visit http://localhost:8000/site/login
 ```
+
+## 🔑 Default Login
+
+| Field    | Value                       |
+|----------|-----------------------------|
+| URL      | `/site/login`               |
+| Username | `admin@smart-academy.local` |
+| Password | `admin123`                  |
 
 ---
 
-## 🔑 Default Credentials
+## 🎨 UI Architecture
 
-After seeding, the following login accounts are created:
+### Tailwind CSS + Vite
 
-| Role | Username | Password |
-|------|----------|----------|
-| Super Admin (staff) | admin | admin123 |
-| Student (sample) | admission_no | student123 |
+The project ships with Tailwind 4 via Vite (`resources/css/app.css`).
+After `npm install && npm run build`, compiled assets land in `public/build/`
+and `@vite()` directives serve them with proper cache-busting.
 
-⚠️ **IMPORTANT SECURITY NOTE**: The original CI3 project stored student/parent passwords in plain text. This Laravel 12 version automatically upgrades them to bcrypt on first login. To pre-hash all legacy passwords, run:
+**Fallback for first run:** If `public/build/manifest.json` doesn't exist
+(you haven't run `npm build` yet), the layout auto-falls-back to the Tailwind
+Play CDN + DataTables CDN — so the UI works immediately without `npm`.
+
+### Shadcn-style Blade Components
+
+All reusable components live in `resources/views/components/`:
+
+| Component        | Usage                                           |
+|------------------|--------------------------------------------------|
+| `<x-card>`       | Card container with shadow                       |
+| `<x-card-header>`| Card header section                              |
+| `<x-card-title>` | Card title (h3)                                  |
+| `<x-card-content>` | Card body                                     |
+| `<x-button>`     | Button or link button (default/outline/ghost/destructive/success variants) |
+| `<x-input>`      | Form input with focus ring                       |
+| `<x-textarea>`   | Form textarea                                    |
+| `<x-select>`     | Form select dropdown                             |
+| `<x-label>`      | Form label                                       |
+| `<x-form-field>` | Wraps label + input + description                |
+| `<x-badge>`      | Status badge (default/success/warning/info/destructive) |
+| `<x-avatar>`     | User avatar with image or fallback initials     |
+| `<x-stat-card>`  | Dashboard stat card with icon + trend            |
+| `<x-page-header>`| Page title + description + action buttons row    |
+| `<x-data-table>` | DataTables-wrapped table                         |
+
+Example usage:
+```blade
+<x-card>
+    <x-card-header>
+        <x-card-title>Student Information</x-card-title>
+        <x-card-description>Fill in the details below</x-card-description>
+    </x-card-header>
+    <x-card-content>
+        <div class="grid grid-cols-2 gap-4">
+            <x-form-field label="First Name" required>
+                <x-input name="firstname" required />
+            </x-form-field>
+            <x-form-field label="Gender">
+                <x-select name="gender" :options="['male' => 'Male', 'female' => 'Female']" />
+            </x-form-field>
+        </div>
+        <x-button type="submit">Save</x-button>
+    </x-card-content>
+</x-card>
+```
+
+### Plain Vanilla JS (No Vue/React)
+
+- **Alpine.js** (3 KB) for dropdowns, modals, theme toggle
+- **jQuery** + **DataTables** for tables (search, sort, paginate, export)
+- **Chart.js** for dashboard charts
+
+### Theme Toggle
+
+Dark mode toggle in the header (moon/sun icon). State is persisted in
+`localStorage.theme` and applied via a `.dark` class on `<html>`. All
+Shadcn design tokens use CSS variables, so the same Tailwind build supports
+both themes.
+
+### Sidebar Navigation
+
+The sidebar is organized into 13 functional groups with proper icons:
+
+| Group            | Modules                                                        |
+|------------------|----------------------------------------------------------------|
+| Students         | Students, Categories, Classes, Sections, Sessions, Alumni      |
+| Academics        | Subjects, Subject Groups, Timetable, Homework, Attendance, Holidays |
+| Examinations    | Exam Groups, Exams, Exam Schedule, Exam Results, Grades, Admit Cards |
+| Fees            | Collect Fees, Fee Categories, Fee Types, Fee Groups, Session Groups, Fee Master, Discounts |
+| Finance         | Income, Expense                                                |
+| Personnel        | Staff, Roles, Departments, Designations                        |
+| Library         | Books, Book Issues                                              |
+| Operations      | Inventory, Transport, Hostel                                   |
+| Front Office    | Enquiries, Complaints, Visitors                                |
+| Front CMS       | Pages, Media, Menus                                            |
+| Communicate     | Notifications, Chat                                             |
+| Reports         | Student, Fee, Balance Sheet                                    |
+| System          | Settings, Audit Log, Addons, Email Config, SMS Config, Languages, Currencies |
+
+---
+
+## 📁 Project Statistics
+
+| Layer              | Count  |
+|--------------------|--------|
+| Migrations         | 113    |
+| Models             | 103    |
+| Admin controllers  | 99     |
+| Student controllers | 16    |
+| API controllers    | 15     |
+| Gateway controllers | 9     |
+| Front-CMS controllers | 7   |
+| Blade views        | 458    |
+| Blade components   | 17     |
+| Routes             | 883    |
+| Service classes    | 11     |
+| Middleware         | 9      |
+| Helper files       | 8      |
+| PHPUnit tests      | 5 (passing) |
+| Seeders           | 9      |
+
+---
+
+## 🛠 Tech Stack
+
+- **PHP** 8.2+
+- **Laravel** 12.x
+- **MySQL** 5.7+ / MariaDB 10.3+ / SQLite 3.35+ (works with all)
+- **Tailwind CSS** 4.x (via Vite)
+- **Alpine.js** 3.x (CDN)
+- **jQuery** 3.7 + DataTables 2.x
+- **Chart.js** 4.x
+- **Font Awesome** 6.x (CDN)
+- **Spatie Permission** 6.x
+- **Yajra DataTables** 12.x
+- **Barryvdh DomPDF** 3.x
+- **Maatwebsite Excel** 3.x
+- **Intervention Image** 3.x
+
+---
+
+## 🔌 Asset Pipeline
 
 ```bash
-php artisan smart-academy:hash-user-passwords
+# For development (watches changes):
+npm run dev
+
+# For production build:
+npm run build
 ```
 
----
-
-## 📁 Project Structure
-
-```
-laravel-smart-academy/
-├── app/
-│   ├── Auth/                      # Custom guards (AdminGuard, StudentGuard)
-│   ├── Console/Commands/          # Artisan commands (install, hash passwords, fee reminder)
-│   ├── Events/                    # Domain events (StudentEnrolled, FeePaymentReceived, etc.)
-│   ├── Exceptions/                # Exception handlers
-│   ├── Facades/                   # Customlib, Rbac, Mailgateway, Smsgateway, etc.
-│   ├── Helpers/                   # 8 helper files (custom, menu, customfield, csv, lang, mime, json_output, addon)
-│   ├── Http/
-│   │   ├── Controllers/
-│   │   │   ├── Admin/             # 87 admin resource controllers
-│   │   │   ├── Api/               # 15 API controllers (mobile)
-│   │   │   ├── Auth/              # Login/forgot/reset for admin + student
-│   │   │   ├── Front/             # 7 front-CMS controllers
-│   │   │   ├── Gateway/           # 9 payment gateway IPN handlers
-│   │   │   ├── OnlineAdmission/   # 4 online admission controllers
-│   │   │   ├── Student/           # 16 student portal controllers
-│   │   │   └── {Welcome,Cron,Webhooks}Controller.php
-│   │   ├── Middleware/            # 8 middlewares (auth, rbac, locale, etc.)
-│   │   ├── Requests/              # Form request validators
-│   │   └── ViewComposers/         # Admin/Student/Front layout composers
-│   ├── Listeners/                 # Domain event listeners
-│   ├── Mail/                      # Mailables (StaffPasswordReset, UserPasswordReset)
-│   ├── Models/                    # 103 Eloquent models with relationships
-│   ├── Notifications/             # Database notifications
-│   ├── Policies/                  # Authorization policies
-│   ├── Providers/                  # App, Auth, Broadcast, Event, Route service providers
-│   ├── Services/                  # 11 service classes (Customlib, AuthManager, Rbac, etc.)
-│   └── View/Components/           # Blade components
-├── bootstrap/
-│   └── app.php                    # Laravel 11+ bootstrap (middleware aliases, routing)
-├── config/                        # All Laravel + custom config (auth, app, school, modules, permission)
-├── database/
-│   ├── migrations/                # 103 migrations for 207 source tables
-│   ├── factories/                 # Model factories
-│   └── seeders/
-│       └── DatabaseSeeder.php     # Composite seeder (language, roles, permissions, settings, sample data)
-├── lang/
-│   └── en/                        # English translations (messages, pagination, validation)
-├── public/
-│   ├── backend/                   # AdminLTE 2.x assets (~94 MB) — copied from source
-│   ├── themes/                    # 8 front-CMS themes — copied from source
-│   ├── uploads/                   # Sample uploaded files
-│   ├── index.php                  # Front controller
-│   └── .htaccess
-├── resources/
-│   ├── views/
-│   │   ├── admin/                 # Admin module CRUD views (24 modules × 4 views = 96 files)
-│   │   ├── auth/                  # Login/forgot/reset views (admin + student)
-│   │   ├── errors/                # 403, 404, 500, maintenance error pages
-│   │   ├── front/                 # Front-CMS home, page, admission views
-│   │   ├── layouts/               # 4 master layouts (admin, student, front, auth)
-│   │   ├── student/               # Student portal dashboard
-│   │   └── emails/                # Email templates (staff-reset, user-reset, fee-reminder, fee-receipt, absent)
-│   ├── css/                       # Sass source
-│   └── js/                        # JS entry point
-├── routes/
-│   ├── web.php                    # Public + auth + group prefixes
-│   ├── admin.php                  # 87 admin resource routes
-│   ├── student.php                # 16 student portal routes
-│   ├── api.php                    # 15 API routes + datatables endpoints
-│   ├── front.php                  # 7 front-CMS routes
-│   ├── gateway.php                # 9 payment gateway routes
-│   ├── online_admission.php       # 4 online admission routes
-│   ├── console.php                # Scheduled tasks
-│   └── channels.php               # Broadcast channels
-├── storage/
-│   ├── app/                       # Uploaded files (public disk)
-│   ├── framework/                  # Cache, sessions, views
-│   └── logs/                      # Laravel log files
-├── tests/                         # PHPUnit tests (Feature, Unit)
-├── .env.example                   # Environment template
-├── composer.json                  # PHP dependencies
-├── package.json                   # Node dependencies (for asset compilation)
-├── vite.config.js                 # Vite build configuration
-└── README.md                      # This file
-```
-
----
-
-## 🔄 CI3 → Laravel 12 Mapping Reference
-
-See `MIGRATION-GUIDE.md` for a complete file-by-file mapping between the original CodeIgniter 3 source and the Laravel 12 equivalent.
-
-Key conceptual mappings:
-
-| CI3 Concept | Laravel 12 Equivalent |
-|-------------|----------------------|
-| `application/controllers/*.php` (action methods) | `app/Http/Controllers/*.php` (resource methods) |
-| `application/models/*.php` (153 files) | `app/Models/*.php` (103 models with relationships) |
-| `application/views/layout/{header,sidebar,footer}.php` (triple-load) | `resources/views/layouts/admin.blade.php` (Blade `@extends`/`@yield`) |
-| `application/libraries/Customlib.php` (god class, 2300 lines) | `app/Services/Customlib.php` (focused methods) + `App\Facades\Customlib` |
-| `application/libraries/Auth.php` | `app/Services/AuthManager.php` + custom `AdminGuard` / `StudentGuard` |
-| `application/libraries/Rbac.php` | `app/Services/RbacService.php` + `Spatie\Permission` |
-| `application/libraries/Mailgateway.php` | `app/Services/MailgatewayService.php` + `Mail` facade |
-| `application/libraries/Smsgateway.php` (15 providers, 3145 lines) | `app/Services/SmsgatewayService.php` (one method per provider) |
-| `application/libraries/Media_storage.php` | `app/Services/MediaStorageService.php` + `Storage` facade |
-| `application/helpers/*.php` (7 files, 70 functions) | `app/Helpers/*.php` (8 files, same functions) |
-| `application/config/autoload.php` (libraries/helpers) | `composer.json` autoload.files + service container bindings |
-| `application/config/routes.php` | `routes/web.php` + `routes/admin.php` + `routes/student.php` etc. |
-| `application/config/config.php` | `.env` + `config/app.php` |
-| `application/config/database.php` | `.env` + `config/database.php` |
-| `application/hooks/maintenance_hook.php` | `app/Http/Middleware/MaintenanceMode.php` |
-| `application/core/MY_Controller.php` (base controllers) | `app/Http/Middleware/{AuthenticateAdmin,AuthenticateStudent}.php` |
-| `application/language/{lang}/system_lang.php` (77 languages) | `lang/{locale}/*.php` (Laravel localization) |
-| `system/core/Loader.php` (`$this->load->view()`) | `view()->render()` / Blade `@include` |
-| `system/database/DB_query_builder.php` | `Illuminate\Database\Query\Builder` (Eloquent) |
-| `application/third_party/mpdf/` | `mpdf/mpdf` composer package |
-| `application/third_party/google/` | `google/apiclient` composer package |
-| `application/third_party/omnipay/` | `league/omnipay` + `omnipay/stripe` + `omnipay/paypal` |
-
----
-
-## 🔐 Two-Guard Authentication
-
-The original CI3 project used two separate session blobs (`$this->session->userdata('admin')` and `$this->session->userdata('student')`). This Laravel 12 port replicates that with two custom guards defined in `config/auth.php`:
-
-```php
-'admin' => [
-    'driver' => 'admin',
-    'provider' => 'staff',  // App\Models\Staff
-],
-'student' => [
-    'driver' => 'student',
-    'provider' => 'users',  // App\Models\User
-],
-```
-
-Usage:
-```php
-auth('admin')->user();    // Staff instance
-auth('student')->user();  // User instance
-
-// In routes:
-Route::middleware('auth.admin')->group(...);
-Route::middleware('auth.student')->group(...);
-```
-
----
-
-## 🛡 RBAC Permission System
-
-The original CI3 used a four-action RBAC convention (`can_view`, `can_add`, `can_edit`, `can_delete`) stored in the `roles_permissions` table. This Laravel 12 port wraps Spatie's `laravel-permission` package to maintain backward compatibility while exposing the standard Spatie API:
-
-```php
-// Check permission (anywhere)
-app(RbacService::class)->hasPermission('student.view');
-
-// In Blade:
-@can('student.view') ... @endcan
-@can('student.create') <a href="...">Add</a> @endcan
-
-// In routes (middleware):
-Route::get('/student', ...)->middleware('rbac:student.view');
-
-// Original CI3 method still supported:
-app(RbacService::class)->hasPrivilege('student', 'add');  // → student.create
-
-// Super Admin (role id 7 in CI3) bypasses all permission checks automatically
-// via Gate::before() in AuthServiceProvider.
-```
-
----
-
-## 🌍 Multi-Language Support
-
-The original CI3 project shipped with **77 language directories** under `application/language/`. This Laravel 12 port uses Laravel's native localization:
-
-```
-lang/
-├── en/    # English (default)
-├── ar/    # Arabic (RTL)
-├── hi/    # Hindi
-├── bn/    # Bengali
-├── es/    # Spanish
-├── fr/    # French
-├── de/    # German
-├── ur/    # Urdu (RTL)
-└── zh/    # Chinese
-```
-
-Locale is set automatically per-request by `SetAppLocale` middleware based on the user's `language_id`. To add more languages, create a new folder under `lang/` and add the locale code to the database `language` table.
-
----
-
-## 📅 Scheduled Tasks
-
-The original CI3 project exposed cron tasks as HTTP endpoints (e.g. `/cron/feereminder/{key}`). This Laravel 12 port uses Laravel's native scheduler in `routes/console.php`:
-
-```bash
-# Run all scheduled tasks
-php artisan schedule:run
-
-# Or set up a system cron entry:
-* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
-```
-
-| Schedule | Task |
-|----------|------|
-| Daily at 09:00 | `fees:reminder` — Send fee reminders via SMS + Email + Push |
-| Daily at 08:00 | `birthday:sms` — Wish happy birthday to students |
-| Weekdays at 11:00 | `absent:sms` — Notify parents of absent students |
-| 1st of each month at 09:00 | `salary:reminder` — Staff salary reminder |
-| Daily at 02:00 | `examreport:generate` — Auto-generate exam reports |
-| Daily at 00:30 | `inactive:students` — Mark inactive students |
-| Every 5 min | `attendance:sync` — Biometric attendance sync |
+After `npm run build`, the compiled assets are in `public/build/`. The Blade
+layout auto-detects the manifest and uses `@vite()` directives. If no manifest
+is found (e.g., you haven't run `npm` yet), the layout falls back to CDN
+versions of Tailwind, DataTables, jQuery, Alpine, Chart.js, Font Awesome.
 
 ---
 
 ## 🧪 Running Tests
 
 ```bash
-php artisan test
+vendor/bin/phpunit
 # or
-./vendor/bin/phpunit
+php artisan test
 ```
 
----
-
-## 📦 Building Production Assets
-
-```bash
-npm install
-npm run build         # Production build via Vite
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan event:cache
-php artisan optimize
-```
+Tests cover:
+- Login form renders
+- Admin can log in with valid credentials
+- Admin cannot log in with invalid credentials
+- Authenticated admin can view students list
+- Sample test
 
 ---
 
 ## 🆘 Troubleshooting
 
-### Common Issues
+### "Table cache doesn't exist" error
 
-**1. "No application encryption key has been specified."**
+If you see `SQLSTATE[42S02]: Base table or view not found: 1146 Table '...cache'`,
+you hit the Spatie permission cache-clearing issue. Either:
+
+1. **(Recommended)** Change `.env`:
+   ```
+   CACHE_STORE=file
+   SESSION_DRIVER=file
+   QUEUE_CONNECTION=sync
+   ```
+   Then `php artisan config:clear && php artisan db:seed --force`
+
+2. Or run `php artisan migrate` again — the 4 framework migrations
+   (`cache`, `sessions`, `jobs`, `password_reset_tokens`) are now included.
+
+### Assets not loading after fresh install
+
+The layout auto-falls-back to CDN versions of Tailwind + DataTables if the
+Vite build manifest doesn't exist. To use the compiled version:
 ```bash
-php artisan key:generate
+npm install
+npm run build
 ```
 
-**2. "The stream or file could not be opened" (storage permissions)**
+### Permission denied on storage/
+
 ```bash
 chmod -R 775 storage bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 ```
 
-**3. "SQLSTATE[HY000] [2002] Connection refused"**
-- Verify MySQL is running: `sudo systemctl status mysql`
-- Verify `.env` DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+### CSS looks unstyled / fonts missing
 
-**4. "Class App\Services\Customlib not found"**
-```bash
-composer dump-autoload
-```
+Make sure you're accessing via `php artisan serve` (not file://) so that
+the `/build/` or CDN paths resolve correctly.
 
-**5. Login form returns "These credentials do not match our records."**
-- Make sure you ran `php artisan db:seed --class=AdminUserSeeder` (or `php artisan smart-academy:install`)
-- Default credentials: `admin` / `admin123`
+---
 
-**6. Student login fails on legacy CI3 password**
-- Run `php artisan smart-academy:hash-user-passwords` to upgrade all plain-text passwords to bcrypt.
+## 📦 Files in the ZIP
+
+The ZIP excludes `vendor/`, `node_modules/`, `.git/`, `.env`, and the SQLite
+database file. Run `composer install` and `npm install` to regenerate them.
 
 ---
 
 ## 📜 License
 
-MIT License. Original CI3 project copyright remains with [SirajCse](https://github.com/SirajCse).
-
----
-
-## 🙏 Acknowledgements
-
-- Original project: [smart-academy](https://github.com/SirajCse/smart-academy) by SirajCse
-- CodeIgniter 3 → Laravel 12 migration patterns: Laravel docs
-- AdminLTE theme: [ColorlibHQ/AdminLTE](https://github.com/ColorlibHQ/AdminLTE)
+MIT License. Original CodeIgniter 3 source: [SirajCse/smart-academy](https://github.com/SirajCse/smart-academy).

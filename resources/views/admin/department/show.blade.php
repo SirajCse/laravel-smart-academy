@@ -1,24 +1,41 @@
 @extends('layouts.admin')
 
-@section('title', __('Departments Detail'))
-@section('content_header', __('Departments Detail'))
+@section('title', __('Department Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.department.index') }}" class="hover:text-foreground">Department</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Departments Details') }</h3>
-        <div class="box-tools">
-            @can('admin.department.edit')
-                <a href="{{ route('admin.department.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.department.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-                <tr><th width="30%">{ __('Name') }</th><td>{{ $record->department_name }}</td></tr>
-                <tr><th width="30%">{ __('Description') }</th><td>{{ $record->description }}</td></tr>
+<x-page-header
+    title="Department Details"
+    description="View department record details"
+>
+    <x-button :href="route('admin.department.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.department.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Department Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Name</td>
+                <td class="px-4 py-3 text-sm">{{ $record->department_name ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Description</td>
+                <td class="px-4 py-3 text-sm">{{ $record->description ?? '-' }}</td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

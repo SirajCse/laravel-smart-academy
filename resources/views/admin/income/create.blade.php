@@ -1,44 +1,50 @@
 @extends('layouts.admin')
 
-@section('title', __('Income'))
-@section('content_header', __('Add Income'))
-
-@section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{ __('Add Income') }</h3></div>
-    <div class="box-body">
-        <form method="POST" action="{{ route('admin.income.store') }}" enctype="multipart/form-data">
-            @csrf
-            
-            <div class="form-group { $errors->has('name') ? 'has-error' : '' }">
-                <label>{ __('Title') }</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name', old('name')) }}">
-                @error('name')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('invoice_no') ? 'has-error' : '' }">
-                <label>{ __('Invoice No') }</label>
-                <input type="text" name="invoice_no" class="form-control" value="{{ old('invoice_no', old('invoice_no')) }}">
-                @error('invoice_no')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('amount') ? 'has-error' : '' }">
-                <label>{ __('Amount') }</label>
-                <input type="number" step="0.01" name="amount" class="form-control" value="{{ old('amount', old('amount')) }}">
-                @error('amount')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('date') ? 'has-error' : '' }">
-                <label>{ __('Date') }</label>
-                <input type="text" name="date" class="form-control datepicker" value="{{ old('date', old('date')) }}">
-                @error('date')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> { __('Save') }</button>
-                <a href="{{ route('admin.income.index') }}" class="btn btn-default">{ __('Cancel') }</a>
-            </div>
-        </form>
-    </div>
-</div>
+@section('title', __('Add Income'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.income.index') }}" class="hover:text-foreground">Income</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Add New</span>
 @endsection
 
-@push('scripts')
-<script>$(function() { $('.datepicker').datepicker({ format: 'dd-mm-yyyy', autoclose: true }); $('.select2').select2(); });</script>
-@endpush
+@section('content')
+<x-page-header title="Add New Income" description="Create a new income record" />
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Income Information</x-card-title>
+        <x-card-description>Fill in the details below to create a new income record.</x-card-description>
+    </x-card-header>
+    <x-card-content>
+        <form method="POST" action="{{ route('admin.income.store') }}" enctype="multipart/form-data">
+            @csrf
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="Income Head">
+                <x-select name="income_head_id" :options="[]" placeholder="Select income head" />
+            </x-form-field>
+                <x-form-field label="Title">
+                <x-input name="name" type="text" placeholder="Enter title..." />
+            </x-form-field>
+                <x-form-field label="Invoice No">
+                <x-input name="invoice_no" type="text" placeholder="Enter invoice no..." />
+            </x-form-field>
+                <x-form-field label="Amount">
+                <x-input name="amount" type="number" step="0.01" />
+            </x-form-field>
+                <x-form-field label="Date">
+                <x-input name="date" type="date" />
+            </x-form-field>
+                <x-form-field label="Description">
+                <x-textarea name="description" placeholder="Enter description..." />
+            </x-form-field>
+                <x-form-field label="Payment Mode">
+                <x-select name="payment_mode" :options="['cash' => 'Cash', 'cheque' => 'Cheque', 'dd' => 'DD', 'bank_transfer' => 'Bank Transfer', 'online' => 'Online']" placeholder="Select payment mode" />
+            </x-form-field>
+            </div>
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save Income</x-button>
+                <x-button :href="route('admin.income.index')" variant="outline">Cancel</x-button>
+            </div>
+        </form>
+    </x-card-content>
+</x-card>
+@endsection

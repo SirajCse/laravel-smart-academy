@@ -1,28 +1,45 @@
 @extends('layouts.admin')
 
-@section('title', __('Emailconfig Detail'))
-@section('content_header', __('Emailconfig Detail'))
+@section('title', __('Email Config Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.emailconfig.index') }}" class="hover:text-foreground">Email Config</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Emailconfig Details') }</h3>
-        <div class="box-tools">
-            @can('admin.emailconfig.edit')
-                <a href="{{ route('admin.emailconfig.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.emailconfig.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-            @foreach($record->toArray() as $key => $value)
-                <tr>
-                    <th width="30%">{ ucfirst(str_replace('_', ' ', $key)) }</th>
-                    <td>{ is_array($value) ? json_encode($value) : $value }</td>
-                </tr>
-            @endforeach
+<x-page-header
+    title="Email Config Details"
+    description="View email config record details"
+>
+    <x-button :href="route('admin.emailconfig.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.emailconfig.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Email Config Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Mailer</td>
+                <td class="px-4 py-3 text-sm">{{ $record->mailer ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Host</td>
+                <td class="px-4 py-3 text-sm">{{ $record->smtp_host ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">From</td>
+                <td class="px-4 py-3 text-sm">{{ $record->from_email ?? '-' }}</td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

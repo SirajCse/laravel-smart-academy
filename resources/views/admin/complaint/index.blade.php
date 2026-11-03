@@ -1,63 +1,81 @@
 @extends('layouts.admin')
 
-@section('title', __('Complaints'))
-@section('content_header', __('Manage Complaints'))
+@section('title', __('Complaint'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <span>Complaint</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Complaints List') }</h3>
-        <div class="box-tools">
-            @can('admin.complaint.create')
-                <a href="{{ route('admin.complaint.create') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> { __('Add New') }</a>
-            @endcan
+<x-page-header
+    title="Complaint"
+    description="Manage all complaint records"
+>
+    <x-button :href="route('admin.complaint.create')" size="sm">
+        <i class="fa fa-plus"></i> Add New
+    </x-button>
+</x-page-header>
+
+<x-card>
+    <x-card-content class="p-0">
+        <div class="border-b px-6 py-4">
+            <h3 class="text-lg font-semibold">Complaint List</h3>
         </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-hover table-striped datatable">
-            <thead>
-                <tr>
-                    <th>{ __('Name') }</th>
-                    <th>{ __('Email') }</th>
-                    <th>{ __('Phone') }</th>
-                    <th>{ __('Date') }</th>
-                    <th>{ __('Status') }</th>
-                    <th>{ __('Actions') }</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($records as $record)
-                <tr>
-                    <td>{{ $record->name }}</td>
-                    <td>{{ $record->email }}</td>
-                    <td>{{ $record->phone }}</td>
-                    <td>{{ $record->date }}</td>
-                    <td>{{ $record->status }}</td>
-                    <td>
-                        <div class="btn-group">
-                            <a href="{{ route('admin.complaint.show', $record) }}" class="btn btn-xs btn-info" title="{ __('View') }"><i class="fa fa-eye"></i></a>
-                            @can('admin.complaint.edit')
-                                <a href="{{ route('admin.complaint.edit', $record) }}" class="btn btn-xs btn-warning" title="{ __('Edit') }"><i class="fa fa-edit"></i></a>
-                            @endcan
-                            @can('admin.complaint.delete')
-                                <form method="POST" action="{{ route('admin.complaint.destroy', $record) }}" style="display:inline-block;" onsubmit="return confirm('{ __('Are you sure?') }')">
+        <div class="p-6">
+            <table id="complaint-table" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Name</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Phone</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Date</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Status</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($records as $i => $record)
+                    <tr>
+                        <td class="px-4 py-3">{{ $record->name ?? '-' }}</td>
+                        <td class="px-4 py-3">{{ $record->phone ?? '-' }}</td>
+                        <td class="px-4 py-3">{{ formatDate($record->date) }}</td>
+                        <td class="px-4 py-3"><x-badge>{{ $record->status }}</x-badge></td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-1">
+                                <a href="{{ route('admin.complaint.show', $record) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-input hover:bg-accent" title="View">
+                                    <i class="fa fa-eye text-sm"></i>
+                                </a>
+                                <a href="{{ route('admin.complaint.edit', $record) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-input hover:bg-accent" title="Edit">
+                                    <i class="fa fa-pencil text-sm"></i>
+                                </a>
+                                <form method="POST" action="{{ route('admin.complaint.destroy', $record) }}" onsubmit="return confirmDelete()" class="inline-block">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-xs btn-danger" title="{ __('Delete') }"><i class="fa fa-trash"></i></button>
+                                    <button type="submit" class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-input text-destructive hover:bg-destructive/10" title="Delete">
+                                        <i class="fa fa-trash text-sm"></i>
+                                    </button>
                                 </form>
-                            @endcan
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr><td colspan="6" class="text-center text-muted">{ __('No records found') }</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-        {{ $records->withQueryString()->links() }}
-    </div>
-</div>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-4 py-12 text-center text-muted-foreground">
+                            <i class="fa fa-inbox text-3xl mb-2"></i>
+                            <p>No complaint records found.</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </x-card-content>
+</x-card>
 @endsection
 
 @push('scripts')
-<script>$(document).ready(function() { $('.datatable').DataTable({ pageLength: 25 }); });</script>
+<script>
+$(function() {
+    window.initDataTable('#complaint-table', {
+        order: [[0, 'desc']],
+    });
+});
+</script>
 @endpush

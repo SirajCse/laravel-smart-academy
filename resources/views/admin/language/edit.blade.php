@@ -1,37 +1,43 @@
 @extends('layouts.admin')
 
-@section('title', __('Languages'))
-@section('content_header', __('Edit Languages'))
-
-@section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{ __('Edit Languages') }</h3></div>
-    <div class="box-body">
-        <form method="POST" action="{{ route('admin.language.update', $record) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="form-group { $errors->has('language') ? 'has-error' : '' }">
-                <label>{ __('Language Name') }</label>
-                <input type="text" name="language" class="form-control" value="{{ old('language', $record->language) }}">
-                @error('language')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('short_code') ? 'has-error' : '' }">
-                <label>{ __('Short Code') }</label>
-                <input type="text" name="short_code" class="form-control" value="{{ old('short_code', $record->short_code) }}">
-                @error('short_code')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group">
-                <label><input type="checkbox" name="is_rtl" value="1" {{ old('is_rtl', $record->is_rtl) ? 'checked' : '' }}> { __('RTL') }</label>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> { __('Save') }</button>
-                <a href="{{ route('admin.language.index') }}" class="btn btn-default">{ __('Cancel') }</a>
-            </div>
-        </form>
-    </div>
-</div>
+@section('title', __('Edit Language'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.language.index') }}" class="hover:text-foreground">Language</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Edit</span>
 @endsection
 
-@push('scripts')
-<script>$(function() { $('.datepicker').datepicker({ format: 'dd-mm-yyyy', autoclose: true }); $('.select2').select2(); });</script>
-@endpush
+@section('content')
+<x-page-header title="Edit Language" description="Update the language record" />
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Language Information</x-card-title>
+        <x-card-description>Update the details below.</x-card-description>
+    </x-card-header>
+    <x-card-content>
+        <form method="POST" action="{{ route('admin.language.update', $record) }}" enctype="multipart/form-data">
+            @csrf @method('PUT')
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="Language Name">
+                <x-input name="language" type="text" placeholder="Enter language name..." />
+            </x-form-field>
+                <x-form-field label="Short Code">
+                <x-input name="short_code" type="text" placeholder="Enter short code..." />
+            </x-form-field>
+                <div class="flex items-center gap-2 pt-6">
+                <input type="checkbox" name="is_rtl" value="1" id="is_rtl" class="rounded border-input text-primary focus:ring-ring" { { old('is_rtl') ? 'checked' : '' } } />
+                <x-label for="is_rtl">RTL</x-label>
+            </div>
+                <div class="flex items-center gap-2 pt-6">
+                <input type="checkbox" name="is_active" value="1" id="is_active" class="rounded border-input text-primary focus:ring-ring" { { old('is_active') ? 'checked' : '' } } />
+                <x-label for="is_active">Active</x-label>
+            </div>
+            </div>
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save Changes</x-button>
+                <x-button :href="route('admin.language.index')" variant="outline">Cancel</x-button>
+            </div>
+        </form>
+    </x-card-content>
+</x-card>
+@endsection

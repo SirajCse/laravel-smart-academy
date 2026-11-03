@@ -1,27 +1,35 @@
 @extends('layouts.admin')
 
 @section('title', __('Edit Income Head'))
-@section('content_header', __('Edit Income Head'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.income-head.index') }}" class="hover:text-foreground">Income Head</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Edit</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{ __('Income Head Information') }</h3></div>
-    <div class="box-body">
+<x-page-header title="Edit Income Head" description="Update the income head record" />
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Income Head Information</x-card-title>
+        <x-card-description>Update the details below.</x-card-description>
+    </x-card-header>
+    <x-card-content>
         <form method="POST" action="{{ route('admin.income-head.update', $record) }}" enctype="multipart/form-data">
             @csrf @method('PUT')
-            <div class="form-group">
-                <label>{ __('Name') }</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name', $record->name ?? '') }}">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="Income Category">
+                <x-input name="income_category" type="text" placeholder="Enter income category..." />
+            </x-form-field>
+                <x-form-field label="Description">
+                <x-textarea name="description" placeholder="Enter description..." />
+            </x-form-field>
             </div>
-            <div class="form-group">
-                <label>{ __('Description') }</label>
-                <textarea name="description" class="form-control" rows="3">{{ old('description', $record->description ?? '') }}</textarea>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> { __('Save') }</button>
-                <a href="{{ route('admin.income-head.index') }}" class="btn btn-default">{ __('Cancel') }</a>
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save Changes</x-button>
+                <x-button :href="route('admin.income-head.index')" variant="outline">Cancel</x-button>
             </div>
         </form>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

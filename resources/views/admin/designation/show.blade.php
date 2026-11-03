@@ -1,24 +1,41 @@
 @extends('layouts.admin')
 
-@section('title', __('Designations Detail'))
-@section('content_header', __('Designations Detail'))
+@section('title', __('Designation Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.designation.index') }}" class="hover:text-foreground">Designation</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Designations Details') }</h3>
-        <div class="box-tools">
-            @can('admin.designation.edit')
-                <a href="{{ route('admin.designation.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.designation.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-                <tr><th width="30%">{ __('Designation') }</th><td>{{ $record->designation }}</td></tr>
-                <tr><th width="30%">{ __('Description') }</th><td>{{ $record->description }}</td></tr>
+<x-page-header
+    title="Designation Details"
+    description="View designation record details"
+>
+    <x-button :href="route('admin.designation.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.designation.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Designation Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Designation</td>
+                <td class="px-4 py-3 text-sm">{{ $record->designation ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Description</td>
+                <td class="px-4 py-3 text-sm">{{ $record->description ?? '-' }}</td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

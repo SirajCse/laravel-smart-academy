@@ -1,39 +1,41 @@
 @extends('layouts.admin')
 
-@section('title', __('Subjects'))
-@section('content_header', __('Edit Subjects'))
-
-@section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{ __('Edit Subjects') }</h3></div>
-    <div class="box-body">
-        <form method="POST" action="{{ route('admin.subject.update', $record) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="form-group { $errors->has('name') ? 'has-error' : '' }">
-                <label>{ __('Subject Name') }</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name', $record->name) }}">
-                @error('name')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('code') ? 'has-error' : '' }">
-                <label>{ __('Code') }</label>
-                <input type="text" name="code" class="form-control" value="{{ old('code', $record->code) }}">
-                @error('code')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('type') ? 'has-error' : '' }">
-                <label>{ __('Type') }</label>
-                <input type="text" name="type" class="form-control" value="{{ old('type', $record->type) }}">
-                @error('type')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> { __('Save') }</button>
-                <a href="{{ route('admin.subject.index') }}" class="btn btn-default">{ __('Cancel') }</a>
-            </div>
-        </form>
-    </div>
-</div>
+@section('title', __('Edit Subject'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.subject.index') }}" class="hover:text-foreground">Subject</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Edit</span>
 @endsection
 
-@push('scripts')
-<script>$(function() { $('.datepicker').datepicker({ format: 'dd-mm-yyyy', autoclose: true }); $('.select2').select2(); });</script>
-@endpush
+@section('content')
+<x-page-header title="Edit Subject" description="Update the subject record" />
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Subject Information</x-card-title>
+        <x-card-description>Update the details below.</x-card-description>
+    </x-card-header>
+    <x-card-content>
+        <form method="POST" action="{{ route('admin.subject.update', $record) }}" enctype="multipart/form-data">
+            @csrf @method('PUT')
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="Subject Name">
+                <x-input name="name" type="text" placeholder="Enter subject name..." />
+            </x-form-field>
+                <x-form-field label="Code">
+                <x-input name="code" type="text" placeholder="Enter code..." />
+            </x-form-field>
+                <x-form-field label="Type">
+                <x-input name="type" type="text" placeholder="Enter type..." />
+            </x-form-field>
+                <x-form-field label="Class">
+                <x-select name="class_id" :options="[]" placeholder="Select class" />
+            </x-form-field>
+            </div>
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save Changes</x-button>
+                <x-button :href="route('admin.subject.index')" variant="outline">Cancel</x-button>
+            </div>
+        </form>
+    </x-card-content>
+</x-card>
+@endsection

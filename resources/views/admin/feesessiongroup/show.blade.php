@@ -1,28 +1,41 @@
 @extends('layouts.admin')
 
-@section('title', __('Feesessiongroup Detail'))
-@section('content_header', __('Feesessiongroup Detail'))
+@section('title', __('Fee Session Group Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.feesessiongroup.index') }}" class="hover:text-foreground">Fee Session Group</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Feesessiongroup Details') }</h3>
-        <div class="box-tools">
-            @can('admin.feesessiongroup.edit')
-                <a href="{{ route('admin.feesessiongroup.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.feesessiongroup.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-            @foreach($record->toArray() as $key => $value)
-                <tr>
-                    <th width="30%">{ ucfirst(str_replace('_', ' ', $key)) }</th>
-                    <td>{ is_array($value) ? json_encode($value) : $value }</td>
-                </tr>
-            @endforeach
+<x-page-header
+    title="Fee Session Group Details"
+    description="View fee session group record details"
+>
+    <x-button :href="route('admin.feesessiongroup.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.feesessiongroup.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Fee Session Group Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Session</td>
+                <td class="px-4 py-3 text-sm">{{ $record?->session?->session ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Fee Type</td>
+                <td class="px-4 py-3 text-sm">{{ $record?->groupType?->type?->name ?? '-' }}</td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

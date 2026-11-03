@@ -1,27 +1,41 @@
 @extends('layouts.admin')
 
-@section('title', __('Add Smsconfig'))
-@section('content_header', __('Add New Smsconfig'))
+@section('title', __('Add SMS Config'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.smsconfig.index') }}" class="hover:text-foreground">SMS Config</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Add New</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{ __('Smsconfig Information') }</h3></div>
-    <div class="box-body">
+<x-page-header title="Add New SMS Config" description="Create a new sms config record" />
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>SMS Config Information</x-card-title>
+        <x-card-description>Fill in the details below to create a new sms config record.</x-card-description>
+    </x-card-header>
+    <x-card-content>
         <form method="POST" action="{{ route('admin.smsconfig.store') }}" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
-                <label>{ __('Name') }</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name') }}">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="Provider">
+                <x-select name="provider" :options="['twilio' => 'Twilio', 'nexmo' => 'Nexmo', 'msg91' => 'MSG91', 'textlocal' => 'TextLocal', 'plivo' => 'Plivo']" placeholder="Select provider" />
+            </x-form-field>
+                <x-form-field label="API Key">
+                <x-input name="api_key" type="text" placeholder="Enter api key..." />
+            </x-form-field>
+                <x-form-field label="Sender ID">
+                <x-input name="sender_id" type="text" placeholder="Enter sender id..." />
+            </x-form-field>
+                <x-form-field label="API URL">
+                <x-input name="api_url" type="text" placeholder="Enter api url..." />
+            </x-form-field>
             </div>
-            <div class="form-group">
-                <label>{ __('Description') }</label>
-                <textarea name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> { __('Save') }</button>
-                <a href="{{ route('admin.smsconfig.index') }}" class="btn btn-default">{ __('Cancel') }</a>
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save SMS Config</x-button>
+                <x-button :href="route('admin.smsconfig.index')" variant="outline">Cancel</x-button>
             </div>
         </form>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

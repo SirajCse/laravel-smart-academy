@@ -1,24 +1,37 @@
 @extends('layouts.admin')
 
-@section('title', __('Fee Groups Detail'))
-@section('content_header', __('Fee Groups Detail'))
+@section('title', __('Fee Group Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.feegroup.index') }}" class="hover:text-foreground">Fee Group</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Fee Groups Details') }</h3>
-        <div class="box-tools">
-            @can('admin.feegroup.edit')
-                <a href="{{ route('admin.feegroup.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.feegroup.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-                <tr><th width="30%">{ __('Group Name') }</th><td>{{ $record->name }}</td></tr>
-                <tr><th width="30%">{ __('Description') }</th><td>{{ $record->description }}</td></tr>
+<x-page-header
+    title="Fee Group Details"
+    description="View fee group record details"
+>
+    <x-button :href="route('admin.feegroup.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.feegroup.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Fee Group Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Group</td>
+                <td class="px-4 py-3 text-sm">{{ $record->name ?? '-' }}</td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

@@ -1,27 +1,44 @@
 @extends('layouts.admin')
 
 @section('title', __('Edit Book Issue'))
-@section('content_header', __('Edit Book Issue'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.book-issue.index') }}" class="hover:text-foreground">Book Issue</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Edit</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{ __('Book Issue Information') }</h3></div>
-    <div class="box-body">
+<x-page-header title="Edit Book Issue" description="Update the book issue record" />
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Book Issue Information</x-card-title>
+        <x-card-description>Update the details below.</x-card-description>
+    </x-card-header>
+    <x-card-content>
         <form method="POST" action="{{ route('admin.book-issue.update', $record) }}" enctype="multipart/form-data">
             @csrf @method('PUT')
-            <div class="form-group">
-                <label>{ __('Name') }</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name', $record->name ?? '') }}">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="Book">
+                <x-select name="book_id" :options="[]" placeholder="Select book" />
+            </x-form-field>
+                <x-form-field label="Member ID">
+                <x-input name="member_id" type="text" placeholder="Enter member id..." />
+            </x-form-field>
+                <x-form-field label="Member Type">
+                <x-select name="member_type" :options="[]" placeholder="Select member type" />
+            </x-form-field>
+                <x-form-field label="Issue Date">
+                <x-input name="issue_date" type="date" />
+            </x-form-field>
+                <x-form-field label="Return Date">
+                <x-input name="return_date" type="date" />
+            </x-form-field>
             </div>
-            <div class="form-group">
-                <label>{ __('Description') }</label>
-                <textarea name="description" class="form-control" rows="3">{{ old('description', $record->description ?? '') }}</textarea>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> { __('Save') }</button>
-                <a href="{{ route('admin.book-issue.index') }}" class="btn btn-default">{ __('Cancel') }</a>
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save Changes</x-button>
+                <x-button :href="route('admin.book-issue.index')" variant="outline">Cancel</x-button>
             </div>
         </form>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

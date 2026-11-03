@@ -1,27 +1,36 @@
 @extends('layouts.admin')
 
 @section('title', __('Add Session'))
-@section('content_header', __('Add New Session'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.session.index') }}" class="hover:text-foreground">Session</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Add New</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{ __('Session Information') }</h3></div>
-    <div class="box-body">
+<x-page-header title="Add New Session" description="Create a new session record" />
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Session Information</x-card-title>
+        <x-card-description>Fill in the details below to create a new session record.</x-card-description>
+    </x-card-header>
+    <x-card-content>
         <form method="POST" action="{{ route('admin.session.store') }}" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
-                <label>{ __('Name') }</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name') }}">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="Session Year">
+                <x-input name="session" type="text" placeholder="Enter session year..." />
+            </x-form-field>
+                <div class="flex items-center gap-2 pt-6">
+                <input type="checkbox" name="is_active" value="1" id="is_active" class="rounded border-input text-primary focus:ring-ring" { { old('is_active') ? 'checked' : '' } } />
+                <x-label for="is_active">Active</x-label>
             </div>
-            <div class="form-group">
-                <label>{ __('Description') }</label>
-                <textarea name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> { __('Save') }</button>
-                <a href="{{ route('admin.session.index') }}" class="btn btn-default">{ __('Cancel') }</a>
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save Session</x-button>
+                <x-button :href="route('admin.session.index')" variant="outline">Cancel</x-button>
             </div>
         </form>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

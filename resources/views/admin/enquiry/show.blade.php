@@ -1,28 +1,57 @@
 @extends('layouts.admin')
 
-@section('title', __('Enquiries Detail'))
-@section('content_header', __('Enquiries Detail'))
+@section('title', __('Enquiry Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.enquiry.index') }}" class="hover:text-foreground">Enquiry</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Enquiries Details') }</h3>
-        <div class="box-tools">
-            @can('admin.enquiry.edit')
-                <a href="{{ route('admin.enquiry.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.enquiry.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-                <tr><th width="30%">{ __('Name') }</th><td>{{ $record->name }}</td></tr>
-                <tr><th width="30%">{ __('Email') }</th><td>{{ $record->email }}</td></tr>
-                <tr><th width="30%">{ __('Phone') }</th><td>{{ $record->phone }}</td></tr>
-                <tr><th width="30%">{ __('Purpose') }</th><td>{{ $record->purpose }}</td></tr>
-                <tr><th width="30%">{ __('Date') }</th><td>{{ $record->date }}</td></tr>
-                <tr><th width="30%">{ __('Status') }</th><td>{{ $record->status }}</td></tr>
+<x-page-header
+    title="Enquiry Details"
+    description="View enquiry record details"
+>
+    <x-button :href="route('admin.enquiry.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.enquiry.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Enquiry Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Name</td>
+                <td class="px-4 py-3 text-sm">{{ $record->name ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Email</td>
+                <td class="px-4 py-3 text-sm">{{ $record->email ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Phone</td>
+                <td class="px-4 py-3 text-sm">{{ $record->phone ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Purpose</td>
+                <td class="px-4 py-3 text-sm">{{ $record->purpose ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Date</td>
+                <td class="px-4 py-3 text-sm">{{ formatDate($record->date) }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Status</td>
+                <td class="px-4 py-3"><x-badge :variant="$record->status ? 'success' : 'secondary'">{{ $record->status ? 'Yes' : 'No' }}</x-badge></td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

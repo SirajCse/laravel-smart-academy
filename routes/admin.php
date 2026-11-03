@@ -105,6 +105,7 @@ use App\Http\Controllers\Admin\{
     FinanceReportController,
     CronController,
     WebhooksController,
+    VisitorsController,
 };
 
 // ─── Dashboard / landing ────────────────────────────────────────────
@@ -309,3 +310,6 @@ Route::get('reports/alumni',                         [ReportController::class, '
 // Cron & webhooks admin views
 Route::resource('cron',                              CronController::class);
 Route::resource('webhooks',                         WebhooksController::class);
+
+// Visitors (front office)
+Route::get('visitors', [VisitorsController::class, 'index'])->name('visitors.index');

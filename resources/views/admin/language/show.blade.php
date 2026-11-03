@@ -1,25 +1,45 @@
 @extends('layouts.admin')
 
-@section('title', __('Languages Detail'))
-@section('content_header', __('Languages Detail'))
+@section('title', __('Language Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.language.index') }}" class="hover:text-foreground">Language</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Languages Details') }</h3>
-        <div class="box-tools">
-            @can('admin.language.edit')
-                <a href="{{ route('admin.language.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.language.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-                <tr><th width="30%">{ __('Language Name') }</th><td>{{ $record->language }}</td></tr>
-                <tr><th width="30%">{ __('Short Code') }</th><td>{{ $record->short_code }}</td></tr>
-                <tr><th width="30%">{ __('RTL') }</th><td>{{ $record->is_rtl }}</td></tr>
+<x-page-header
+    title="Language Details"
+    description="View language record details"
+>
+    <x-button :href="route('admin.language.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.language.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Language Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Language</td>
+                <td class="px-4 py-3 text-sm">{{ $record->language ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Code</td>
+                <td class="px-4 py-3 text-sm">{{ $record->short_code ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">RTL</td>
+                <td class="px-4 py-3"><x-badge :variant="$record->is_rtl ? 'success' : 'secondary'">{{ $record->is_rtl ? 'Yes' : 'No' }}</x-badge></td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

@@ -3,37 +3,22 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
-        "prod": "vite build --mode production"
+        "build": "vite build"
     },
     "devDependencies": {
-        "@popperjs/core": "^2.11.6",
+        "@tailwindcss/vite": "^4.0.0",
+        "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
-        "bootstrap": "^5.3.3",
         "laravel-vite-plugin": "^1.0",
-        "sass": "^1.69.0",
-        "vite": "^5.4.0"
+        "tailwindcss": "^4.0.0",
+        "vite": "^6.0.0"
     },
     "dependencies": {
-        "admin-lte": "^3.2",
-        "bootstrap-datepicker": "^1.10.0",
-        "bootstrap-daterangepicker": "^3.1.0",
-        "chart.js": "^4.4.0",
-        "ckeditor": "^4.22.1",
-        "datatables.net": "^1.13.7",
-        "datatables.net-bs5": "^1.13.7",
-        "datatables.net-buttons": "^2.4.2",
-        "datatables.net-buttons-bs5": "^2.4.2",
-        "datatables.net-responsive-bs5": "^2.5.0",
-        "font-awesome": "^4.7.0",
-        "fullcalendar": "^6.1.10",
-        "icheck-bootstrap": "^3.0.1",
-        "inputmask": "^5.0.8",
-        "jquery": "^3.7.1",
-        "jquery-ui-dist": "^1.13.2",
-        "moment": "^2.29.4",
-        "select2": "^4.1.0-rc.0",
-        "sweetalert2": "^11.6.16",
-        "toastr": "^2.1.4"
+        "alpinejs": "^3.14.0",
+        "apexcharts": "^4.0.0",
+        "datatables.net-dt": "^2.1.0",
+        "datatables.net-buttons-dt": "^3.0.0",
+        "datatables.net-responsive-dt": "^3.0.0",
+        "jquery": "^3.7.1"
     }
 }

@@ -1,63 +1,62 @@
 @extends('layouts.admin')
 
-@section('title', __('Staff'))
-@section('content_header', __('Edit Staff'))
-
-@section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{ __('Edit Staff') }</h3></div>
-    <div class="box-body">
-        <form method="POST" action="{{ route('admin.staff.update', $record) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="form-group { $errors->has('name') ? 'has-error' : '' }">
-                <label>{ __('Name') }</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name', $record->name) }}">
-                @error('name')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('email') ? 'has-error' : '' }">
-                <label>{ __('Email') }</label>
-                <input type="text" name="email" class="form-control" value="{{ old('email', $record->email) }}">
-                @error('email')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('phone') ? 'has-error' : '' }">
-                <label>{ __('Phone') }</label>
-                <input type="text" name="phone" class="form-control" value="{{ old('phone', $record->phone) }}">
-                @error('phone')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('gender') ? 'has-error' : '' }">
-                <label>{ __('Gender') }</label>
-                <select name="gender" class="form-control select2">
-                    <option value="">{ __('Select') }</option>
-                </select>
-                @error('gender')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('dob') ? 'has-error' : '' }">
-                <label>{ __('Date of Birth') }</label>
-                <input type="text" name="dob" class="form-control datepicker" value="{{ old('dob', $record->dob) }}">
-                @error('dob')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('joining_date') ? 'has-error' : '' }">
-                <label>{ __('Joining Date') }</label>
-                <input type="text" name="joining_date" class="form-control datepicker" value="{{ old('joining_date', $record->joining_date) }}">
-                @error('joining_date')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('image') ? 'has-error' : '' }">
-                <label>{ __('Photo') }</label>
-                <input type="file" name="image" class="form-control" accept="image/*">
-                @if(isset($image_url))
-                    <img src="{{ $image_url }}" class="img-thumbnail" style="max-width: 150px; margin-top: 10px;">
-                @endif
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> { __('Save') }</button>
-                <a href="{{ route('admin.staff.index') }}" class="btn btn-default">{ __('Cancel') }</a>
-            </div>
-        </form>
-    </div>
-</div>
+@section('title', __('Edit Staff'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.staff.index') }}" class="hover:text-foreground">Staff</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Edit</span>
 @endsection
 
-@push('scripts')
-<script>$(function() { $('.datepicker').datepicker({ format: 'dd-mm-yyyy', autoclose: true }); $('.select2').select2(); });</script>
-@endpush
+@section('content')
+<x-page-header title="Edit Staff" description="Update the staff record" />
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Staff Information</x-card-title>
+        <x-card-description>Update the details below.</x-card-description>
+    </x-card-header>
+    <x-card-content>
+        <form method="POST" action="{{ route('admin.staff.update', $record) }}" enctype="multipart/form-data">
+            @csrf @method('PUT')
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="Staff ID">
+                <x-input name="staff_id" type="text" placeholder="Enter staff id..." />
+            </x-form-field>
+                <x-form-field label="Name">
+                <x-input name="name" type="text" placeholder="Enter name..." />
+            </x-form-field>
+                <x-form-field label="Email">
+                <x-input name="email" type="email" placeholder="email@example.com" />
+            </x-form-field>
+                <x-form-field label="Phone">
+                <x-input name="phone" type="text" placeholder="Enter phone..." />
+            </x-form-field>
+                <x-form-field label="Gender">
+                <x-select name="gender" :options="['male' => 'Male', 'female' => 'Female', 'other' => 'Other']" placeholder="Select gender" />
+            </x-form-field>
+                <x-form-field label="Date of Birth">
+                <x-input name="dob" type="date" />
+            </x-form-field>
+                <x-form-field label="Joining Date">
+                <x-input name="joining_date" type="date" />
+            </x-form-field>
+                <x-form-field label="Password">
+                <x-input name="password" type="password" placeholder="••••••••" />
+            </x-form-field>
+                <x-form-field label="Role">
+                <x-select name="role_id" :options="[]" placeholder="Select role" />
+            </x-form-field>
+                <x-form-field label="Department">
+                <x-select name="department_id" :options="[]" placeholder="Select department" />
+            </x-form-field>
+                <x-form-field label="Designation">
+                <x-select name="designation_id" :options="[]" placeholder="Select designation" />
+            </x-form-field>
+            </div>
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save Changes</x-button>
+                <x-button :href="route('admin.staff.index')" variant="outline">Cancel</x-button>
+            </div>
+        </form>
+    </x-card-content>
+</x-card>
+@endsection

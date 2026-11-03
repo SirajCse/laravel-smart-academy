@@ -1,26 +1,45 @@
 @extends('layouts.admin')
 
-@section('title', __('Holidays Detail'))
-@section('content_header', __('Holidays Detail'))
+@section('title', __('Holiday Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.holiday.index') }}" class="hover:text-foreground">Holiday</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Holidays Details') }</h3>
-        <div class="box-tools">
-            @can('admin.holiday.edit')
-                <a href="{{ route('admin.holiday.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.holiday.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-                <tr><th width="30%">{ __('Title') }</th><td>{{ $record->title }}</td></tr>
-                <tr><th width="30%">{ __('From Date') }</th><td>{{ $record->from_date }}</td></tr>
-                <tr><th width="30%">{ __('To Date') }</th><td>{{ $record->to_date }}</td></tr>
-                <tr><th width="30%">{ __('Description') }</th><td>{{ $record->description }}</td></tr>
+<x-page-header
+    title="Holiday Details"
+    description="View holiday record details"
+>
+    <x-button :href="route('admin.holiday.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.holiday.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Holiday Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Title</td>
+                <td class="px-4 py-3 text-sm">{{ $record->title ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">From</td>
+                <td class="px-4 py-3 text-sm">{{ formatDate($record->from_date) }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">To</td>
+                <td class="px-4 py-3 text-sm">{{ formatDate($record->to_date) }}</td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

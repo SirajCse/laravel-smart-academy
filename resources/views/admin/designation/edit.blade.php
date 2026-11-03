@@ -1,34 +1,35 @@
 @extends('layouts.admin')
 
-@section('title', __('Designations'))
-@section('content_header', __('Edit Designations'))
-
-@section('content')
-<div class="box box-primary">
-    <div class="box-header with-border"><h3 class="box-title">{ __('Edit Designations') }</h3></div>
-    <div class="box-body">
-        <form method="POST" action="{{ route('admin.designation.update', $record) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="form-group { $errors->has('designation') ? 'has-error' : '' }">
-                <label>{ __('Designation') }</label>
-                <input type="text" name="designation" class="form-control" value="{{ old('designation', $record->designation) }}">
-                @error('designation')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group { $errors->has('description') ? 'has-error' : '' }">
-                <label>{ __('Description') }</label>
-                <textarea name="description" class="form-control" rows="3">{{ old('description', $record->description) }}</textarea>
-                @error('description')<span class="help-block">{{ $message }}</span>@enderror
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> { __('Save') }</button>
-                <a href="{{ route('admin.designation.index') }}" class="btn btn-default">{ __('Cancel') }</a>
-            </div>
-        </form>
-    </div>
-</div>
+@section('title', __('Edit Designation'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.designation.index') }}" class="hover:text-foreground">Designation</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Edit</span>
 @endsection
 
-@push('scripts')
-<script>$(function() { $('.datepicker').datepicker({ format: 'dd-mm-yyyy', autoclose: true }); $('.select2').select2(); });</script>
-@endpush
+@section('content')
+<x-page-header title="Edit Designation" description="Update the designation record" />
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Designation Information</x-card-title>
+        <x-card-description>Update the details below.</x-card-description>
+    </x-card-header>
+    <x-card-content>
+        <form method="POST" action="{{ route('admin.designation.update', $record) }}" enctype="multipart/form-data">
+            @csrf @method('PUT')
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <x-form-field label="Designation">
+                <x-input name="designation" type="text" placeholder="Enter designation..." />
+            </x-form-field>
+                <x-form-field label="Description">
+                <x-textarea name="description" placeholder="Enter description..." />
+            </x-form-field>
+            </div>
+            <div class="mt-6 flex items-center gap-2">
+                <x-button type="submit"><i class="fa fa-save"></i> Save Changes</x-button>
+                <x-button :href="route('admin.designation.index')" variant="outline">Cancel</x-button>
+            </div>
+        </form>
+    </x-card-content>
+</x-card>
+@endsection

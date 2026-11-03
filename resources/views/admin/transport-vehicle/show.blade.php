@@ -1,28 +1,45 @@
 @extends('layouts.admin')
 
-@section('title', __('Transport Vehicle Detail'))
-@section('content_header', __('Transport Vehicle Detail'))
+@section('title', __('Transport Vehicle Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.transport-vehicle.index') }}" class="hover:text-foreground">Transport Vehicle</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Transport Vehicle Details') }</h3>
-        <div class="box-tools">
-            @can('admin.transport-vehicle.edit')
-                <a href="{{ route('admin.transport-vehicle.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.transport-vehicle.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-            @foreach($record->toArray() as $key => $value)
-                <tr>
-                    <th width="30%">{ ucfirst(str_replace('_', ' ', $key)) }</th>
-                    <td>{ is_array($value) ? json_encode($value) : $value }</td>
-                </tr>
-            @endforeach
+<x-page-header
+    title="Transport Vehicle Details"
+    description="View transport vehicle record details"
+>
+    <x-button :href="route('admin.transport-vehicle.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.transport-vehicle.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Transport Vehicle Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Vehicle No</td>
+                <td class="px-4 py-3 text-sm">{{ $record->vehicle_no ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Driver</td>
+                <td class="px-4 py-3 text-sm">{{ $record->driver_name ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Fee</td>
+                <td class="px-4 py-3 text-sm">{{ formatCurrency($record->vehicle_fee ?? 0) }}</td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

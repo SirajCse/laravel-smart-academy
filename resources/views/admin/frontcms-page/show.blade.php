@@ -1,28 +1,45 @@
 @extends('layouts.admin')
 
-@section('title', __('Frontcms Page Detail'))
-@section('content_header', __('Frontcms Page Detail'))
+@section('title', __('Front CMS Page Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.frontcms-page.index') }}" class="hover:text-foreground">Front CMS Page</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Frontcms Page Details') }</h3>
-        <div class="box-tools">
-            @can('admin.frontcms-page.edit')
-                <a href="{{ route('admin.frontcms-page.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.frontcms-page.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-            @foreach($record->toArray() as $key => $value)
-                <tr>
-                    <th width="30%">{ ucfirst(str_replace('_', ' ', $key)) }</th>
-                    <td>{ is_array($value) ? json_encode($value) : $value }</td>
-                </tr>
-            @endforeach
+<x-page-header
+    title="Front CMS Page Details"
+    description="View front cms page record details"
+>
+    <x-button :href="route('admin.frontcms-page.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.frontcms-page.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Front CMS Page Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Title</td>
+                <td class="px-4 py-3 text-sm">{{ $record->title ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Slug</td>
+                <td class="px-4 py-3 text-sm">{{ $record->slug ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Status</td>
+                <td class="px-4 py-3"><x-badge :variant="$record->is_active ? 'success' : 'secondary'">{{ $record->is_active ? 'Yes' : 'No' }}</x-badge></td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection

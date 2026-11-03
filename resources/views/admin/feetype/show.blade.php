@@ -1,25 +1,41 @@
 @extends('layouts.admin')
 
-@section('title', __('Fee Types Detail'))
-@section('content_header', __('Fee Types Detail'))
+@section('title', __('Fee Type Details'))
+@section('breadcrumbs')
+    <i class="fa fa-chevron-right text-xs"></i> <a href="{{ route('admin.feetype.index') }}" class="hover:text-foreground">Fee Type</a>
+    <i class="fa fa-chevron-right text-xs"></i> <span>Details</span>
+@endsection
 
 @section('content')
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">{ __('Fee Types Details') }</h3>
-        <div class="box-tools">
-            @can('admin.feetype.edit')
-                <a href="{{ route('admin.feetype.edit', $record) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> { __('Edit') }</a>
-            @endcan
-            <a href="{{ route('admin.feetype.index') }}" class="btn btn-default btn-sm"><i class="fa fa-list"></i> { __('List') }</a>
-        </div>
-    </div>
-    <div class="box-body">
-        <table class="table table-bordered">
-                <tr><th width="30%">{ __('Code') }</th><td>{{ $record->code }}</td></tr>
-                <tr><th width="30%">{ __('Name') }</th><td>{{ $record->name }}</td></tr>
-                <tr><th width="30%">{ __('Description') }</th><td>{{ $record->description }}</td></tr>
+<x-page-header
+    title="Fee Type Details"
+    description="View fee type record details"
+>
+    <x-button :href="route('admin.feetype.edit', $record)" variant="outline" size="sm">
+        <i class="fa fa-pencil"></i> Edit
+    </x-button>
+    <x-button :href="route('admin.feetype.index')" variant="ghost" size="sm">
+        <i class="fa fa-arrow-left"></i> Back to List
+    </x-button>
+</x-page-header>
+
+<x-card class="max-w-3xl">
+    <x-card-header>
+        <x-card-title>Fee Type Information</x-card-title>
+    </x-card-header>
+    <x-card-content>
+        <table class="w-full">
+            <tbody>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Code</td>
+                <td class="px-4 py-3 text-sm">{{ $record->code ?? '-' }}</td>
+            </tr>
+                <tr class="border-b last:border-0">
+                <td class="px-4 py-3 text-sm font-medium text-muted-foreground" style="width:30%">Name</td>
+                <td class="px-4 py-3 text-sm">{{ $record->name ?? '-' }}</td>
+            </tr>
+            </tbody>
         </table>
-    </div>
-</div>
+    </x-card-content>
+</x-card>
 @endsection
